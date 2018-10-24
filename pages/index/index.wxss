@@ -1,0 +1,41 @@
+/**index.wxss**/
+
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-box {
+  height: 84rpx;
+  background: #fff;
+   padding-top: 12rpx;
+}
+
+.search-input {
+  background: #eff2f7;
+  height: 72rpx;
+  margin: 0 20rpx;
+  border-radius: 8rpx;
+  padding-left: 12%;
+}
+
+.search-box icon {
+  position: absolute;
+  margin: 14rpx 40rpx;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+.usermotto {
+  margin-top: 200px;
+}
