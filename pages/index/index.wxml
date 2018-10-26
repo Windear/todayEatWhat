@@ -67,7 +67,7 @@
         <text>随机选择</text>
       </view>
       <view class='btn_type ok_btn'>
-        <text>生成菜单({{foodNum + fixedFoodMenu.length}})</text>
+        <text>生成菜单({{foodMenu.length + fixedFoodMenu.length}})</text>
       </view>
     </view>
   </view>

@@ -48,7 +48,7 @@
     <!-- 随机确认 -->
     <view class='modal_btn'>
       <view class='red_btn'>随机选择</view>
-      <view class='blue_btn'>确定菜品</view>
+      <view class='blue_btn' bindtap='confirmFood'>确定菜品</view>
     </view>
     <!-- 随机确认 -->
 

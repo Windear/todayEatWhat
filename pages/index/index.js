@@ -8,9 +8,11 @@ Page({
     eat_time: '',
     time: '',
     foodNum: 2,
-    fixedFood:false,
+    fixedFood: false,
+    //预备固定菜单
+    readyFixed: {},
     //固定菜单
-    fixedFoodMenu:[],
+    fixedFoodMenu: [],
     //总体列表 早中晚餐
 
     //主菜列表
@@ -73,7 +75,7 @@ Page({
     //获取util.js里面的时间函数
     var time = util.hour(new Date());
     //设置时间
-    if (time < 10) {
+    if (time >= 3 && time < 10) {
       this.setData({
         eat_time: '早餐'
       });
@@ -83,14 +85,14 @@ Page({
         eat_time: '午餐'
       });
     };
-    if (time >= 14 && time < 20) {
+    if (time >= 14 && time < 24) {
       this.setData({
         eat_time: '晚餐'
       });
     };
-    if (time >= 20 && time < 3) {
+    if (time > 0 && time < 3) {
       this.setData({
-        eat_time: '宵夜'
+        eat_time: '晚餐'
       });
     };
     this.setData({
@@ -215,25 +217,28 @@ Page({
   },
 
   //固定菜品
-  fixedFood(){
+  fixedFood() {
     //设置标签是否显示
     let fixedFood = this.data.selectFood.fixed;
-    if (fixedFood){
+    if (fixedFood) {
       let selectFood = this.data.selectFood;
+      //将固定状态改为false然后放进data中
       selectFood.fixed = false;
       this.setData({
-        selectFood: selectFood
-      })
+        selectFood: selectFood,
+        readyFixed: []
+      });
+
       //console.log(fixedFood);
-    }else{
-      //定义固定菜单数组
-      let fixedFoodMenu = this.data.fixedFoodMenu;
+    } else {
+      //定义预备固定菜单数组
+      let readyFixed = this.data.readyFixed;
       let selectFood = this.data.selectFood;
       //给选中菜单增加固定字段
       selectFood['fixed'] = true;
-      fixedFoodMenu.push(this.data.selectFood);
+      readyFixed = this.data.selectFood;
       this.setData({
-        //fixedFoodMenu: fixedFoodMenu,
+        readyFixed: readyFixed,
         selectFood: selectFood
       })
       //console.log(fixedFoodMenu);
@@ -242,6 +247,51 @@ Page({
       // fixedFood: fixedFood
     })
 
+  },
+
+  //确定菜品
+  confirmFood() {
+    let readyFixed = this.data.readyFixed;
+    let fixedFoodMenu = this.data.fixedFoodMenu;
+    let foodMenu = this.data.foodMenu;
+    if (readyFixed){
+      fixedFoodMenu.push(readyFixed);
+    };
+    
+
+    //固定菜单去重
+    for (var i = 0; i < fixedFoodMenu.length - 1; i++) {
+      for (var j = i + 1; j < fixedFoodMenu.length; j++) {
+        if (fixedFoodMenu[i].id == fixedFoodMenu[j].id) {
+          fixedFoodMenu.splice(j, 1); //console.log(arr[j]);
+          j--;
+        }
+      }
+    }
+    //console.log(fixedFoodMenu);
+
+    //去掉原有菜单里面的重复
+    for (var i = 0; i < fixedFoodMenu.length; i++) {
+      var flag = true;
+      for (var j = 0; j < foodMenu.length; j++) {
+        if (fixedFoodMenu[i].id == foodMenu[j].id) {
+          foodMenu.splice(j, 1);
+          flag = false;
+          break;
+        }
+      }
+    }
+    
+
+    //console.log(fixedFoodMenu);
+
+    this.setData({
+      fixedFoodMenu: fixedFoodMenu,
+      foodMenu: foodMenu,
+      readyFixed: '',
+      foodNum: foodMenu.length,
+      showModalStatus: false
+    });
   },
 
 
