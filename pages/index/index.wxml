@@ -17,13 +17,13 @@
 
     <view class='select_num'>
       <view class='select_left_box'>
-        <text bindtap="setFoodNum" data-index="1" class='{{foodNum==2?"action":""}}'>1人</text>
-        <text bindtap="setFoodNum" data-index="2" class='{{foodNum==3?"action":""}}'>2人</text>
-        <text bindtap="setFoodNum" data-index="3" class='{{foodNum==4?"action":""}}'>3人</text>
-        <text bindtap="setFoodNum" data-index="5" class='{{foodNum==8?"action":""}}'>5人</text>
+        <text bindtap="setFoodNum" data-index="1" class='{{foodMenu.length + fixedFoodMenu.length==2?"action":""}}'>1人</text>
+        <text bindtap="setFoodNum" data-index="2" class='{{foodMenu.length + fixedFoodMenu.length==3?"action":""}}'>2人</text>
+        <text bindtap="setFoodNum" data-index="3" class='{{foodMenu.length + fixedFoodMenu.length==4?"action":""}}'>3人</text>
+        <text bindtap="setFoodNum" data-index="5" class='{{foodMenu.length + fixedFoodMenu.length==8?"action":""}}'>5人</text>
       </view>
       <view class='select_right_box'>
-        <text bindtap="setFoodNum" data-index="12" class='{{foodNum==12?"action":""}}'>更多</text>
+        <text bindtap="setFoodNum" data-index="12" class='{{foodMenu.length + fixedFoodMenu.length==12?"action":""}}'>更多</text>
       </view>
     </view>
 

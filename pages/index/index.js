@@ -126,27 +126,32 @@ Page({
   setFoodNum(event) {
     if (event.target.dataset.index == 1) {
       this.setData({
-        foodNum: 2
+        foodNum: 2,
+        fixedFoodMenu:[]
       });
     };
     if (event.target.dataset.index == 2) {
       this.setData({
-        foodNum: 3
+        foodNum: 3,
+        fixedFoodMenu: []
       });
     };
     if (event.target.dataset.index == 3) {
       this.setData({
-        foodNum: 4
+        foodNum: 4,
+        fixedFoodMenu: []
       });
     };
     if (event.target.dataset.index == 5) {
       this.setData({
-        foodNum: 8
+        foodNum: 8,
+        fixedFoodMenu: []
       });
     };
     if (event.target.dataset.index == 12) {
       this.setData({
-        foodNum: 12
+        foodNum: 12,
+        fixedFoodMenu: []
       });
     };
     this.setFoodMenu();
@@ -224,9 +229,10 @@ Page({
       let selectFood = this.data.selectFood;
       //将固定状态改为false然后放进data中
       selectFood.fixed = false;
+      //console.log(selectFood);
       this.setData({
         selectFood: selectFood,
-        readyFixed: []
+        readyFixed: ''
       });
 
       //console.log(fixedFood);
@@ -254,10 +260,25 @@ Page({
     let readyFixed = this.data.readyFixed;
     let fixedFoodMenu = this.data.fixedFoodMenu;
     let foodMenu = this.data.foodMenu;
-    if (readyFixed){
+    let selectFood = this.data.selectFood;
+    //如果獲取的預估定食物不為空
+    if (readyFixed != '') {
+      //將預估定食物添加進入固定列表
       fixedFoodMenu.push(readyFixed);
+      //console.log(readyFixed);
     };
-    
+    //如果選中的食物，固定狀態為false
+    if (!selectFood.fixed) {
+      //去掉固定食物裡面與該選中食物一樣的食物
+      for (var i = 0; i < fixedFoodMenu.length; i++) {
+        if (selectFood.id == fixedFoodMenu[i].id) {
+          fixedFoodMenu.splice(i, 1);
+          //將選中食物加入到隨機菜單中
+          foodMenu.push(selectFood);
+        }
+      }
+    };
+
 
     //固定菜单去重
     for (var i = 0; i < fixedFoodMenu.length - 1; i++) {
@@ -268,7 +289,7 @@ Page({
         }
       }
     }
-    //console.log(fixedFoodMenu);
+    //console.log(this.data.selectFood);
 
     //去掉原有菜单里面的重复
     for (var i = 0; i < fixedFoodMenu.length; i++) {
@@ -281,7 +302,7 @@ Page({
         }
       }
     }
-    
+
 
     //console.log(fixedFoodMenu);
 
