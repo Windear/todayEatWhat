@@ -1,6 +1,7 @@
 {
   "pages":[
     "pages/index/index",
+    "pages/index/food-detail/food-detail",
     "pages/logs/logs"
   ],
   "window":{

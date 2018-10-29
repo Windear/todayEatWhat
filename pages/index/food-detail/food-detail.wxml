@@ -1,0 +1,19 @@
+<view>
+  <image class='food_albums' mode='aspectFill' src='{{foodDetail.albums}}'></image>
+</view>
+
+<view class="food_title">
+  <text>{{foodDetail.title}}</text>
+</view>
+
+<view class='food_imtro'>
+  <text>{{foodDetail.imtro}}</text>
+</view>
+
+<view class='ingredients'>
+  <text class='tag_title'>主料：</text>
+  <view class='ingredients_list' wx:for="{{foodDetail.ingredients}}"  wx:for-item="ingredient" data-food-data="{{ingredient}}">
+    <text class='ingredient_name'>{{ingredient.name}}</text>
+    <text class='ingredient_many'>{{ingredient.use}}</text>
+  </view>
+</view>

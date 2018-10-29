@@ -7,10 +7,11 @@ Page({
   data: {
     eat_time: '',
     time: '',
+    peopleNum: 1,
     foodNum: 2,
     fixedFood: false,
     //预备固定菜单
-    readyFixed: {},
+    readyFixed: '',
     //固定菜单
     fixedFoodMenu: [],
     //总体列表 早中晚餐
@@ -18,17 +19,20 @@ Page({
     //主菜列表
     mainCourse: '',
 
-
     //素菜列表
+    vegetableCourse: '',
 
     //凉菜列表
+    coldCourse:'',
 
     //甜品列表
+    sweetCourse: '',
 
     //汤列表
+    soupCourse:'',
 
     //被选中列表
-    foodMenu: '',
+    foodMenu: [],
 
     motto: 'Hello World',
     userInfo: {},
@@ -67,7 +71,10 @@ Page({
 
     this.setTime();
     this.getdata();
-
+    this.getVegetable();
+    this.getCold();
+    this.getSweet();
+    this.getSoup();
   },
 
   //判断当前时间
@@ -104,7 +111,7 @@ Page({
   getdata() { //定义函数名称
     var that = this;
     wx.request({
-      url: 'https://longcz.binzc.com/recipes/searchMenu?str=' + this.data.eat_time + '&pageSize=100&start=0', //仅为示例，并非真实的接口地址
+      url: 'https://longcz.binzc.com/recipes/searchMenu?str=' + this.data.eat_time + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
       method: 'POST',
       data: {},
 
@@ -121,37 +128,103 @@ Page({
     })
   },
 
+  getVegetable() { //定义函数名称
+    var that = this;
+    wx.request({
+      url: 'https://longcz.binzc.com/recipes/searchMenu?str=素菜'  + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
+      method: 'POST',
+      data: {},
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        that.setData({
+          vegetableCourse: res.data
+        });
+      }
+    })
+  },
 
+  getCold() { //定义函数名称
+    var that = this;
+    wx.request({
+      url: 'https://longcz.binzc.com/recipes/searchMenu?str=凉菜' + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
+      method: 'POST',
+      data: {},
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        that.setData({
+          coldCourse: res.data
+        });
+      }
+    })
+  },
+
+  getSweet() { //定义函数名称
+    var that = this;
+    wx.request({
+      url: 'https://longcz.binzc.com/recipes/searchMenu?str=甜点' + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
+      method: 'POST',
+      data: {},
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        that.setData({
+          sweetCourse: res.data
+        });
+      }
+    })
+  },
+
+  getSoup() { //定义函数名称
+    var that = this;
+    wx.request({
+      url: 'https://longcz.binzc.com/recipes/searchMenu?str=汤' + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
+      method: 'POST',
+      data: {},
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        that.setData({
+          soupCourse: res.data
+        });
+      }
+    })
+  },
   //根据人数设置菜品数目
   setFoodNum(event) {
     if (event.target.dataset.index == 1) {
       this.setData({
+        peopleNum: event.target.dataset.index,
         foodNum: 2,
-        fixedFoodMenu:[]
       });
     };
     if (event.target.dataset.index == 2) {
       this.setData({
+        peopleNum: event.target.dataset.index,
         foodNum: 3,
-        fixedFoodMenu: []
       });
     };
     if (event.target.dataset.index == 3) {
       this.setData({
+        peopleNum: event.target.dataset.index,
         foodNum: 4,
-        fixedFoodMenu: []
       });
     };
     if (event.target.dataset.index == 5) {
       this.setData({
+        peopleNum: event.target.dataset.index,
         foodNum: 8,
-        fixedFoodMenu: []
       });
     };
     if (event.target.dataset.index == 12) {
       this.setData({
+        peopleNum: event.target.dataset.index,
         foodNum: 12,
-        fixedFoodMenu: []
       });
     };
     this.setFoodMenu();
@@ -177,8 +250,26 @@ Page({
 
   //将洗牌后的数组使用传入需要显示的菜单
   setFoodMenu() {
-    var foodMenu = this.randomFoodMenu(this.data.mainCourse);
-    foodMenu = foodMenu.slice(0, this.data.foodNum);
+    //创建食物列表。
+    let foodMenu = new Array;
+    for (let i = 0; i < this.data.foodNum; i++) {
+      let obj = {
+        "index": i + 1,
+        "fixed": false,
+        "type": "main"
+      };
+      foodMenu.push(obj);
+    };
+    //将随机菜品传入食物列表。
+    let randomFood = this.randomFoodMenu(this.data.mainCourse);
+    randomFood = randomFood.slice(0, foodMenu.length);
+    for (let j = 0; j < randomFood.length; j++) {
+      foodMenu[j]["id"] = randomFood[j].id;
+      foodMenu[j]["tags"] = randomFood[j].tags;
+      foodMenu[j]["title"] = randomFood[j].title;
+      foodMenu[j]["albums"] = randomFood[j].albums;
+    };
+    //console.log(foodMenu);
     this.setData({
       foodMenu: foodMenu
     });
@@ -191,10 +282,54 @@ Page({
     setInterval(function() {
       if (a != 0) {
         a--;
-        that.setFoodMenu();
+        that.setRandomFood();
         //console.log(a);
       }
     }, 100);
+  },
+
+  //判断菜单食物是否固定，如果固定则不随机，如果不固定则随机
+  setRandomFood() {
+    let foodMenu = this.data.foodMenu;
+
+    for (let i = 0; i < foodMenu.length; i++) {
+      let randomFood = [];
+      if (foodMenu[i].type=="main"){
+        randomFood = this.randomFoodMenu(this.data.mainCourse);
+      };
+      if (foodMenu[i].type == "vegetable") {
+        randomFood = this.randomFoodMenu(this.data.vegetableCourse);
+      };
+      if (foodMenu[i].type == "cold") {
+        randomFood = this.randomFoodMenu(this.data.coldCourse);
+      };
+      if (foodMenu[i].type == "sweet") {
+        randomFood = this.randomFoodMenu(this.data.sweetCourse);
+      };
+      if (foodMenu[i].type == "soup") {
+        randomFood = this.randomFoodMenu(this.data.soupCourse);
+      };
+      randomFood = randomFood.slice(0, 1);
+      if (!foodMenu[i].fixed) {
+        for (let j = 0;j<foodMenu.length;j++){
+          if (randomFood[0].id != foodMenu[j].id ){
+            foodMenu[i]["id"] = randomFood[0].id;
+            foodMenu[i]["tags"] = randomFood[0].tags;
+            foodMenu[i]["title"] = randomFood[0].title;
+            foodMenu[i]["albums"] = randomFood[0].albums;
+          }
+        };
+        
+      };
+
+      // if (foodMenu[i].id){
+
+      // }
+
+    };
+    this.setData({
+      foodMenu: foodMenu
+    });
   },
 
   //打开弹出框
@@ -215,8 +350,35 @@ Page({
 
   //获取点击菜品传过来的值
   getFoodContent(event) {
+    let selectFood = event.currentTarget.dataset.foodData;
+
+    let foodMenu = this.data.foodMenu;
+    //如果点击的是多加个菜（传过来的值为空）
+    if (!selectFood) {
+      let selectFoodRandom = this.randomFoodMenu(this.data.mainCourse);
+      selectFoodRandom = selectFoodRandom.slice(0, 1)[0];
+      selectFood = selectFoodRandom;
+      if (foodMenu[foodMenu.length - 1]) {
+        selectFood['index'] = foodMenu[foodMenu.length - 1].index + 1;
+        //console.log(foodMenu);
+      } else {
+        selectFood['index'] = 1;
+        //console.log(foodMenu);
+      };
+      selectFood['fixed'] = false;
+      selectFood['type'] = "main";
+      //console.log(foodMenu);
+      this.setData({
+        add: true
+      })
+    } else {
+      this.setData({
+        add: false
+      })
+    };
+    //console.log(selectFood);
     this.setData({
-      selectFood: event.currentTarget.dataset.foodData,
+      selectFood: selectFood,
       showModalStatus: true
     })
   },
@@ -225,26 +387,23 @@ Page({
   fixedFood() {
     //设置标签是否显示
     let fixedFood = this.data.selectFood.fixed;
+    let selectFood = this.data.selectFood;
     if (fixedFood) {
-      let selectFood = this.data.selectFood;
+
       //将固定状态改为false然后放进data中
       selectFood.fixed = false;
       //console.log(selectFood);
       this.setData({
         selectFood: selectFood,
-        readyFixed: ''
       });
 
       //console.log(fixedFood);
     } else {
-      //定义预备固定菜单数组
-      let readyFixed = this.data.readyFixed;
-      let selectFood = this.data.selectFood;
+
+
       //给选中菜单增加固定字段
-      selectFood['fixed'] = true;
-      readyFixed = this.data.selectFood;
+      selectFood.fixed = true;
       this.setData({
-        readyFixed: readyFixed,
         selectFood: selectFood
       })
       //console.log(fixedFoodMenu);
@@ -257,62 +416,111 @@ Page({
 
   //确定菜品
   confirmFood() {
-    let readyFixed = this.data.readyFixed;
-    let fixedFoodMenu = this.data.fixedFoodMenu;
     let foodMenu = this.data.foodMenu;
     let selectFood = this.data.selectFood;
-    //如果獲取的預估定食物不為空
-    if (readyFixed != '') {
-      //將預估定食物添加進入固定列表
-      fixedFoodMenu.push(readyFixed);
-      //console.log(readyFixed);
-    };
-    //如果選中的食物，固定狀態為false
-    if (!selectFood.fixed) {
-      //去掉固定食物裡面與該選中食物一樣的食物
-      for (var i = 0; i < fixedFoodMenu.length; i++) {
-        if (selectFood.id == fixedFoodMenu[i].id) {
-          fixedFoodMenu.splice(i, 1);
-          //將選中食物加入到隨機菜單中
-          foodMenu.push(selectFood);
-        }
+    let add = this.data.add;
+    //将选择更改后的食物传入到食物菜单中
+    //foodMenu[selectFood.index-1] = selectFood;
+
+    for (let i = 0; i < foodMenu.length; i++) {
+      if (foodMenu[i].index == selectFood.index) {
+        foodMenu[i] = selectFood;
       }
     };
-
-
-    //固定菜单去重
-    for (var i = 0; i < fixedFoodMenu.length - 1; i++) {
-      for (var j = i + 1; j < fixedFoodMenu.length; j++) {
-        if (fixedFoodMenu[i].id == fixedFoodMenu[j].id) {
-          fixedFoodMenu.splice(j, 1); //console.log(arr[j]);
-          j--;
-        }
-      }
-    }
-    //console.log(this.data.selectFood);
-
-    //去掉原有菜单里面的重复
-    for (var i = 0; i < fixedFoodMenu.length; i++) {
-      var flag = true;
-      for (var j = 0; j < foodMenu.length; j++) {
-        if (fixedFoodMenu[i].id == foodMenu[j].id) {
-          foodMenu.splice(j, 1);
-          flag = false;
-          break;
-        }
-      }
+    if (add) {
+      foodMenu.push(selectFood);
     }
 
-
-    //console.log(fixedFoodMenu);
-
+    //console.log(foodMenu);
     this.setData({
-      fixedFoodMenu: fixedFoodMenu,
       foodMenu: foodMenu,
-      readyFixed: '',
+      //readyFixed: '',
       foodNum: foodMenu.length,
       showModalStatus: false
     });
+  },
+
+  //删除菜品
+  deleteFood() {
+    let selectFood = this.data.selectFood;
+    let foodMenu = this.data.foodMenu;
+    for (let i = 0; i < foodMenu.length; i++) {
+      if (foodMenu[i].index == selectFood.index) {
+        foodMenu.splice(i, 1);
+        // console.log(foodMenu)
+      }
+    };
+    //console.log(foodMenu)
+    this.setData({
+      foodMenu: foodMenu,
+      showModalStatus: false
+    });
+  },
+
+  //将洗牌后的数组使用传入需要显示的菜单
+  setSelectFoodMenu() {
+    let selectFood = this.data.selectFood;
+    let selectFoodRandom =[];
+    if (selectFood.type =="main"){
+      selectFoodRandom = this.randomFoodMenu(this.data.mainCourse);
+    };
+    if (selectFood.type == "vegetable"){
+      selectFoodRandom = this.randomFoodMenu(this.data.vegetableCourse);
+    }
+    if (selectFood.type == "cold") {
+      selectFoodRandom = this.randomFoodMenu(this.data.coldCourse);
+    }
+    if (selectFood.type == "sweet") {
+      selectFoodRandom = this.randomFoodMenu(this.data.sweetCourse);
+    }
+    if (selectFood.type == "soup") {
+      selectFoodRandom = this.randomFoodMenu(this.data.soupCourse);
+    }
+    selectFoodRandom = selectFoodRandom.slice(0, 1)[0];
+    selectFood.id = selectFoodRandom.id;
+    selectFood.tags = selectFoodRandom.tags;
+    selectFood.title = selectFoodRandom.title;
+    selectFood.albums = selectFoodRandom.albums;
+    this.setData({
+      selectFood: selectFood
+    });
+  },
+
+  //弹窗食物随机选择
+  randomSelectFood() {
+    let selectFood = this.data.selectFood;
+    if (!selectFood.fixed) {
+      let that = this;
+      let a = 10;
+      setInterval(function() {
+        if (a != 0) {
+          a--;
+          that.setSelectFoodMenu();
+          //console.log(a);
+        }
+      }, 100);
+    };
+
+  },
+
+
+  //弹窗选择菜品类别
+  selectFoodType(e){
+    let foodType = e.currentTarget.dataset.type;
+    let selectFood = this.data.selectFood;
+    selectFood.type = foodType
+    this.setData({
+      selectFood: selectFood
+    });
+    this.randomSelectFood();
+  },
+
+  //跳转至菜品详情
+  onFoodDetails(event){
+    let foodId = event.currentTarget.dataset.id;
+    wx.navigateTo({  //子页面跳转
+      url: "food-detail/food-detail?id=" + foodId
+    })
   },
 
 

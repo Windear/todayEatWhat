@@ -17,40 +17,34 @@
 
     <view class='select_num'>
       <view class='select_left_box'>
-        <text bindtap="setFoodNum" data-index="1" class='{{foodMenu.length + fixedFoodMenu.length==2?"action":""}}'>1人</text>
-        <text bindtap="setFoodNum" data-index="2" class='{{foodMenu.length + fixedFoodMenu.length==3?"action":""}}'>2人</text>
-        <text bindtap="setFoodNum" data-index="3" class='{{foodMenu.length + fixedFoodMenu.length==4?"action":""}}'>3人</text>
-        <text bindtap="setFoodNum" data-index="5" class='{{foodMenu.length + fixedFoodMenu.length==8?"action":""}}'>5人</text>
+        <text bindtap="setFoodNum" data-index="1" class='{{peopleNum==1?"action":""}}'>1人</text>
+        <text bindtap="setFoodNum" data-index="2" class='{{peopleNum==2?"action":""}}'>2人</text>
+        <text bindtap="setFoodNum" data-index="3" class='{{peopleNum==3?"action":""}}'>3人</text>
+        <text bindtap="setFoodNum" data-index="5" class='{{peopleNum==5?"action":""}}'>5人</text>
       </view>
       <view class='select_right_box'>
-        <text bindtap="setFoodNum" data-index="12" class='{{foodMenu.length + fixedFoodMenu.length==12?"action":""}}'>更多</text>
+        <text bindtap="setFoodNum" data-index="12" class='{{peopleNum==12?"action":""}}'>更多</text>
       </view>
     </view>
 
     <view class='eat_list'>
-      <!-- 固定菜单列表 -->
-      <view class='eat_list_item' wx:for="{{fixedFoodMenu}}" wx:key="food.id" wx:for-item="food" catchtap='getFoodContent' data-food-data="{{food}}">
-        <view class='list_box'>
-          <image class='fixed_img' src='/static/img/fixed_icon.svg'></image>
-          <image class='eat_list_img' src="{{food.albums}}"></image>
-          <!-- <view class='food_tag'>素菜</view> -->
-        </view>
-        <text>{{food.title}}</text>
-      </view>
-      <!-- 固定菜单列表 -->
 
-      <!-- 随机菜单列表 -->
+      <!-- 菜单列表 -->
       <view class='eat_list_item' wx:for="{{foodMenu}}" wx:key="food.id" wx:for-item="food" catchtap='getFoodContent' data-food-data="{{food}}">
         <view class='list_box'>
-          <!-- <image class='fixed_img' src='/static/img/fixed_icon.svg'></image> -->
+          <image class='fixed_img' wx:if="{{food.fixed}}" src='/static/img/fixed_icon.svg'></image>
           <image class='eat_list_img' src="{{food.albums}}"></image>
-          <!-- <view class='food_tag'>素菜</view> -->
+          <!-- <view class='food_tag'  wx:if="{{food.type=='vegetable'}}">素菜</view> -->
+          <view class='food_tag {{food.type =="vegetable"?"vegetable_food_select":"select_none"}}'>素菜</view>
+          <view class='food_tag {{food.type =="cold"?"cold_food_select":"select_none"}}'>凉菜</view>
+          <view class='food_tag {{food.type =="sweet"?"sweet_food_select":"select_none"}}'>甜点</view>
+          <view class='food_tag {{food.type =="soup"?"soup_food_select":"select_none"}}'>汤</view>
         </view>
         <text>{{food.title}}</text>
       </view>
-      <!-- 随机菜单列表 -->
+      <!-- 菜单列表 -->
 
-      <view class='eat_list_item' bindtap="getFoodContent" data-food-data="">
+      <view class='eat_list_item' bindtap="getFoodContent">
         <view class='add_btn'>
           <image src='/static/img/add_btn.svg'></image>
         </view>
@@ -67,7 +61,7 @@
         <text>随机选择</text>
       </view>
       <view class='btn_type ok_btn'>
-        <text>生成菜单({{foodMenu.length + fixedFoodMenu.length}})</text>
+        <text>生成菜单({{foodMenu.length}})</text>
       </view>
     </view>
   </view>
@@ -75,7 +69,7 @@
 
   <!-- 弹出层 -->
   <view wx:if="{{showModalStatus}}">
-    <template is="foodDetailTemplate" data="{{selectFood,fixedFood}}" />
+    <template is="foodDetailTemplate" data="{{selectFood,add}}" />
   </view>
   <!-- 弹出层 -->
 

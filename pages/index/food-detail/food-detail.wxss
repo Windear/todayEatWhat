@@ -1,0 +1,61 @@
+page {
+  background-color: #fff;
+  height: 100%;
+}
+
+.food_albums {
+  width: 100%;
+  height: 240px;
+}
+
+.food_title {
+  font-size: 20px;
+  color: #1f2d3d;
+  letter-spacing: 0;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.food_imtro {
+  margin: 10px 15px;
+  background: #eff2f7;
+  font-size: 14px;
+  color: #1f2d3d;
+  letter-spacing: 0;
+  padding: 10px;
+  font-family: PingFangSC-Light;
+}
+
+.ingredients {
+  margin: 10px 15px;
+}
+
+.tag_title {
+  font-family: PingFangSC-Medium;
+  font-size: 20px;
+  color: #1f2d3d;
+  letter-spacing: 0;
+  margin: 10px 0;
+  display: inline-block;
+}
+
+.ingredients_list {
+  height: 40px;
+  box-shadow: 0 1rpx 0 rgba(239, 242, 247, 1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ingredient_name {
+  font-size: 16px;
+  color: #1f2d3d;
+  letter-spacing: 0;
+}
+
+.ingredient_many {
+  font-size: 16px;
+  color: #8492a6;
+  letter-spacing: 0;
+  text-align: right;
+}

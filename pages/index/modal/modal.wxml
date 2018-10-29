@@ -4,8 +4,12 @@
     <!-- 菜品头像 -->
     <view class='food_detail_box'>
       <image class='fixed_img' wx:if="{{selectFood.fixed}}" style='width:24px;height:24px;' src='/static/img/fixed_icon.svg'></image>
-      <image class='food_detail_img' src="{{selectFood.albums}}"></image>
-      <view class='food_tag'>素菜</view>
+      <image class='food_detail_img' src="{{selectFood.albums}}" catchtap='onFoodDetails' data-id='{{selectFood.id}}'></image>
+      <view class='food_tag {{selectFood.type =="main"?"select_none":"select_none"}}'>主菜</view>
+      <view class='food_tag {{selectFood.type =="vegetable"?"vegetable_food_select":"select_none"}}'>素菜</view>
+      <view class='food_tag {{selectFood.type =="cold"?"cold_food_select":"select_none"}}'>凉菜</view>
+      <view class='food_tag {{selectFood.type =="sweet"?"sweet_food_select":"select_none"}}'>甜点</view>
+      <view class='food_tag {{selectFood.type =="soup"?"soup_food_select":"select_none"}}'>汤</view>
     </view>
     <view class='food_detail_title'>
       {{selectFood.title}}
@@ -21,11 +25,11 @@
 
     <!-- 选择种类 -->
     <view class='select_cate_box'>
-      <view class='main_food_select'>主菜</view>
-      <view class='{{foodNum==3?"action":""}}'>素菜</view>
-      <view class='{{foodNum==4?"action":""}}'>凉菜</view>
-      <view class='{{foodNum==8?"action":""}}'>甜点</view>
-      <view class='{{foodNum==8?"action":""}}'>汤</view>
+      <view class='{{selectFood.type=="main"?"main_food_select":""}}' bindtap="selectFoodType" data-type="main">主菜</view>
+      <view class='{{selectFood.type=="vegetable"?"vegetable_food_select":""}}' bindtap="selectFoodType" data-type="vegetable">素菜</view>
+      <view class='{{selectFood.type=="cold"?"cold_food_select":""}}' bindtap="selectFoodType" data-type="cold">凉菜</view>
+      <view class='{{selectFood.type=="sweet"?"sweet_food_select":""}}' bindtap="selectFoodType" data-type="sweet">甜点</view>
+      <view class='{{selectFood.type=="soup"?"soup_food_select":""}}' bindtap="selectFoodType" data-type="soup">汤</view>
     </view>
     <!-- 选择种类 -->
 
@@ -39,7 +43,7 @@
         <text>固定菜品</text>
       </view>
 
-      <view class='delete_food'>
+      <view class='delete_food' bindtap='deleteFood' wx:if="{{!add}}" >
         <text>删除菜品</text>
       </view>
     </view>
@@ -47,7 +51,7 @@
 
     <!-- 随机确认 -->
     <view class='modal_btn'>
-      <view class='red_btn'>随机选择</view>
+      <view class='red_btn {{selectFood.fixed?"dis_btn":""}}'  bindtap='randomSelectFood'>随机选择</view>
       <view class='blue_btn' bindtap='confirmFood'>确定菜品</view>
     </view>
     <!-- 随机确认 -->

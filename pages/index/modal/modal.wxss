@@ -69,28 +69,32 @@
 }
 
 .main_food_select {
-  background: linear-gradient(to bottom right, rgba(255, 108, 58, 1), rgba(255, 182, 156, 1));
+  background: linear-gradient(to bottom right, rgba(255, 108, 58, 1), rgba(255, 182, 156, 1))!important;
   color: #fff !important;
 }
 
 .vegetable_food_select {
-  background: linear-gradient(to bottom right, rgba(37, 170, 84, 1), rgba(154, 217, 129, 1));
+  background: linear-gradient(to bottom right, rgba(37, 170, 84, 1), rgba(154, 217, 129, 1)) !important;
   color: #fff !important;
 }
 
 .cold_food_select {
-  background: linear-gradient(to bottom right, rgba(32, 160, 255, 1), rgba(144, 208, 255, 1));
+  background: linear-gradient(to bottom right, rgba(32, 160, 255, 1), rgba(144, 208, 255, 1)) !important;
   color: #fff !important;
 }
 
 .sweet_food_select {
-  background: linear-gradient(to bottom right, rgba(245, 81, 95, 1), rgba(255, 174, 186, 1));
+  background: linear-gradient(to bottom right, rgba(245, 81, 95, 1), rgba(255, 174, 186, 1)) !important;
   color: #fff !important;
 }
 
 .soup_food_select {
-  background: linear-gradient(to bottom right, rgba(184, 109, 35, 1), rgba(220, 173, 150, 1));
+  background: linear-gradient(to bottom right, rgba(184, 109, 35, 1), rgba(220, 173, 150, 1)) !important;
   color: #fff !important;
+}
+
+.select_none{
+  display: none;
 }
 
 .fixed_food {
@@ -153,6 +157,11 @@
   line-height: 40px;
   text-align: center;
   box-shadow: 0 2px 10px rgba(29, 182, 255, 0.5);
+}
+
+.dis_btn{
+  background: linear-gradient(to bottom right, rgba(131, 131, 131, 1), rgba(220, 220, 220, 1));
+  box-shadow: 0 2px 10px rgba(192, 192, 192, 0.5);
 }
 
 .close_icon {
