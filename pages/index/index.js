@@ -111,7 +111,7 @@ Page({
   getdata() { //定义函数名称
     var that = this;
     wx.request({
-      url: 'https://longcz.binzc.com/recipes/searchMenu?str=' + this.data.eat_time + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
+      url: 'https://longcz.binzc.com/recipes/searchMenu?str=' + this.data.eat_time + '&pageSize=500&start=0', //仅为示例，并非真实的接口地址
       method: 'POST',
       data: {},
 

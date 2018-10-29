@@ -36,12 +36,13 @@
 /* 滚动背景 */
 
 .main_box {
-  margin: 20px;
+  margin: 20px auto;
 }
 
 .eat_text {
   font-size: 16px;
   color: #1f2d3d;
+  margin-left: 15px;
 }
 
 .select_num {
@@ -50,7 +51,8 @@
   /* margin-top: 20px; */
   margin: 30px auto 0;
   padding: 0 10px;
-  width: 315px;
+  min-width: 300px; 
+   width: 315px; 
 }
 
 .select_num text {
@@ -84,7 +86,8 @@
 }
 
 .eat_list {
-  width: 315px;
+   min-width: 300px; 
+   width: 315px;
   display: flex;
   margin: 30px auto;
   padding-bottom: 120px;
