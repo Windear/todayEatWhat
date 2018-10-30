@@ -30,6 +30,14 @@ page {
   margin: 10px 15px;
 }
 
+.burden {
+  margin: 20px 15px 10px;
+}
+
+.steps {
+  margin: 20px 15px 10px;
+}
+
 .tag_title {
   font-family: PingFangSC-Medium;
   font-size: 20px;
@@ -45,6 +53,33 @@ page {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.step_list {
+  box-shadow: 0 1rpx 0 rgba(239, 242, 247, 1);
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.step_text {
+  font-family: PingFangSC-Light;
+  font-size: 15px;
+  color: #1f2d3d;
+  letter-spacing: 0;
+  margin: 20px 0;
+}
+
+.step_img{
+  width: 100%;
+}
+
+.step_name {
+  font-size: 16px;
+  color: #1f2d3d;
+  letter-spacing: 0;
+  margin: 20px 0 10px;
 }
 
 .ingredient_name {

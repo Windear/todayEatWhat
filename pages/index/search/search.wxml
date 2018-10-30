@@ -1,0 +1,19 @@
+<view class='search_box'>
+  <input placeholder="想吃啥？" placeholder-class="placeholder_search" type='text' value='{{foodVal}}' bindconfirm="bindKeyInput" bindinput="setFoodVal"></input>
+  <image class='delete_img' src='/static/img/delete.svg' bindtap='removeSearchVal'></image>
+  <text bindtap='bindKeyText' data-value='{{foodVal}}'>搜索</text>
+</view>
+
+<scroll-view scroll-y style="height:{{scroll_height}}px;" bindscrolltoupper="" lower-threshold="0" bindscrolltolower="onTopScroll">
+  <view class='search_list' wx:for="{{foodList}}" wx:key="*this" wx:for-item="list">
+    <image class='list_img' src='{{list.albums}}' catchtap='onFoodDetails' data-id='{{list.id}}'></image>
+    <view class='list_content'>
+      <text class='list_title'>{{list.title}}</text>
+      <text class='list_tags'>{{list.tags}}</text>
+      <view class='list_btn'>选择</view>
+    </view>
+  </view>
+  <view wx:if="{{scrollTextShow}}" class="body-view">
+    ———————  我也是有底线的！  ————————
+  </view>
+</scroll-view>

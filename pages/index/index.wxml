@@ -6,13 +6,13 @@
   <view class='search-box'>
     <view class="search">
       <icon type='search' size='20'></icon>
-      <input class='search-input' placeholder="告诉妈妈想吃点啥？" type='search' value=''></input>
+      <input class='search-input' placeholder="告诉妈妈想吃点啥？" type='text' value='' bindconfirm="bindKeyInput" placeholder-class="placeholder" confirm-type="search"></input>
     </view>
   </view>
   <!-- 搜索框 -->
 
   <view class='main_box'>
-    <view class='eat_text'>今日推荐{{eat_time}}:
+    <view class='eat_text'>今日推荐{{eat_time}}:{{inputValue}}
     </view>
 
     <view class='select_num'>

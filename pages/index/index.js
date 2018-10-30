@@ -71,6 +71,7 @@ Page({
 
     this.setTime();
     this.getdata();
+    this.getMain();
     this.getVegetable();
     this.getCold();
     this.getSweet();
@@ -97,7 +98,7 @@ Page({
         eat_time: '晚餐'
       });
     };
-    if (time > 0 && time < 3) {
+    if (time >= 0 && time < 3) {
       this.setData({
         eat_time: '晚餐'
       });
@@ -111,7 +112,7 @@ Page({
   getdata() { //定义函数名称
     var that = this;
     wx.request({
-      url: 'https://longcz.binzc.com/recipes/searchMenu?str=' + this.data.eat_time + '&pageSize=500&start=0', //仅为示例，并非真实的接口地址
+      url: 'https://longcz.binzc.com/recipes/searchMenu?str=' + this.data.eat_time + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
       method: 'POST',
       data: {},
 
@@ -120,9 +121,28 @@ Page({
       },
       success(res) {
         that.setData({
-          mainCourse: res.data
+          recommendCourse: res.data
         });
         that.setFoodMenu();
+        //console.log(res.data)
+      }
+    })
+  },
+
+  //获取服务器菜单
+  getMain() { //定义函数名称
+    var that = this;
+    wx.request({
+      url: 'https://longcz.binzc.com/recipes/getDayMenu?pageSize=500&start=0', //仅为示例，并非真实的接口地址
+      method: 'POST',
+      data: {},
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        that.setData({
+          mainCourse: res.data
+        });
         //console.log(res.data)
       }
     })
@@ -261,7 +281,7 @@ Page({
       foodMenu.push(obj);
     };
     //将随机菜品传入食物列表。
-    let randomFood = this.randomFoodMenu(this.data.mainCourse);
+    let randomFood = this.randomFoodMenu(this.data.recommendCourse);
     randomFood = randomFood.slice(0, foodMenu.length);
     for (let j = 0; j < randomFood.length; j++) {
       foodMenu[j]["id"] = randomFood[j].id;
@@ -520,6 +540,13 @@ Page({
     let foodId = event.currentTarget.dataset.id;
     wx.navigateTo({  //子页面跳转
       url: "food-detail/food-detail?id=" + foodId
+    })
+  },
+
+  //搜索
+  bindKeyInput(e){
+    wx.navigateTo({  //子页面跳转
+      url: "search/search?val=" + e.detail.value
     })
   },
 

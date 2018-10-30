@@ -45,14 +45,22 @@
   margin-left: 15px;
 }
 
+.placeholder {
+  font-family: PingFangSC-Light;
+  font-size: 16px;
+  color: #5e6d82;
+  letter-spacing: 0;
+  line-height: 
+}
+
 .select_num {
   display: flex;
   justify-content: space-between;
   /* margin-top: 20px; */
   margin: 30px auto 0;
   padding: 0 10px;
-  min-width: 300px; 
-   width: 315px; 
+  min-width: 300px;
+  width: 315px;
 }
 
 .select_num text {
@@ -86,8 +94,8 @@
 }
 
 .eat_list {
-   min-width: 300px; 
-   width: 315px;
+  min-width: 300px;
+  width: 315px;
   display: flex;
   margin: 30px auto;
   padding-bottom: 120px;

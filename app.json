@@ -2,6 +2,7 @@
   "pages":[
     "pages/index/index",
     "pages/index/food-detail/food-detail",
+    "pages/index/search/search",
     "pages/logs/logs"
   ],
   "window":{
