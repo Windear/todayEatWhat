@@ -49,6 +49,10 @@
   align-items: center;
 }
 
+.food_detail_search icon{
+  margin-right: 20px;
+}
+
 .select_cate_box {
   background: #eff2f7;
   height: 32px;

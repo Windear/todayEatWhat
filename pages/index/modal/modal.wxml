@@ -18,8 +18,8 @@
 
     <!-- 点菜搜索 -->
     <view class="food_detail_search">
-      <icon type='search' size='20'></icon>
-      <input class='' placeholder="我有想吃的菜~！" type='search' value=''></input>
+      <icon type='search' size='16'></icon>
+      <input class='' placeholder="我有想吃的菜~！" placeholder-class="placeholder" bindconfirm="bindKeyInput" confirm-type="search" type='text' value='' data-onbtn='{{1}}'></input>
     </view>
     <!-- 点菜搜索 -->
 

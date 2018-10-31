@@ -10,7 +10,7 @@
     <view class='list_content'>
       <text class='list_title'>{{list.title}}</text>
       <text class='list_tags'>{{list.tags}}</text>
-      <view class='list_btn'>选择</view>
+      <view class='list_btn' catchtap='selectFood' data-food-data="{{list}}">选择</view>
     </view>
   </view>
   <view wx:if="{{scrollTextShow}}" class="body-view">

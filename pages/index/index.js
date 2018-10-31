@@ -23,51 +23,50 @@ Page({
     vegetableCourse: '',
 
     //凉菜列表
-    coldCourse:'',
+    coldCourse: '',
 
     //甜品列表
     sweetCourse: '',
 
     //汤列表
-    soupCourse:'',
+    soupCourse: '',
 
     //被选中列表
     foodMenu: [],
-
-    motto: 'Hello World',
     userInfo: {},
     hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    //canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
 
   //进入加载
   onLoad: function() {
-    if (app.globalData.userInfo) {
-      this.setData({
-        userInfo: app.globalData.userInfo,
-        hasUserInfo: true
-      })
-    } else if (this.data.canIUse) {
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      app.userInfoReadyCallback = res => {
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
-      }
-    } else {
-      // 在没有 open-type=getUserInfo 版本的兼容处理
-      wx.getUserInfo({
-        success: res => {
-          app.globalData.userInfo = res.userInfo
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      })
-    };
+    // if (app.globalData.userInfo) {
+    //   this.setData({
+    //     userInfo: app.globalData.userInfo,
+    //     hasUserInfo: true
+    //   })
+    // } else if (this.data.canIUse) {
+    //   // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+    //   // 所以此处加入 callback 以防止这种情况
+    //   app.userInfoReadyCallback = res => {
+    //     this.setData({
+    //       userInfo: res.userInfo,
+    //       hasUserInfo: true
+    //     })
+    //   }
+    // } else {
+    //   // 在没有 open-type=getUserInfo 版本的兼容处理
+    //   wx.getUserInfo({
+    //     success: res => {
+    //       app.globalData.userInfo = res.userInfo
+    //       this.setData({
+    //         userInfo: res.userInfo,
+    //         hasUserInfo: true
+    //       })
+    //     }
+    //   })
+    // };
+    console.log(app.globalData.userInfo);
 
     this.setTime();
     this.getdata();
@@ -76,6 +75,51 @@ Page({
     this.getCold();
     this.getSweet();
     this.getSoup();
+  },
+
+  //显示页面执行函数
+  onShow: function() {
+    this.setSearchFood();
+    //console.log(value);
+  },
+
+  //登录
+  getUser(){
+   
+  },
+
+  //或取搜索页面传回来的参数并添加到列表中并固定
+  setSearchFood(){
+    let value = wx.getStorageSync('selectFoodVal');
+    let foodMenu = this.data.foodMenu;
+    let selectFood = this.data.selectFood;
+    let searchBtn = this.data.searchBtn;
+    //console.log(searchBtn);
+    if (searchBtn===0){
+      //将传过来的参数直接添加到foodMenu并固定
+      value['index'] = foodMenu[foodMenu.length-1].index +1;
+      value['fixed'] = true;
+      value['type'] = "main";
+      //console.log(value);
+      foodMenu.push(value);
+      this.setData({
+        foodMenu: foodMenu,      
+      });
+    } else if (searchBtn === 1){
+      //将传过来的参数添加到selectFood并固定
+      selectFood.fixed = true;
+      selectFood.id = value.id;
+      selectFood.albums = value.albums;
+      selectFood.tags = value.tags;
+      selectFood.title = value.title;
+      //console.log(selectFood);      
+      this.setData({
+        selectFood: selectFood,
+      });
+    };
+    this.setData({
+      searchBtn: ""
+    });
   },
 
   //判断当前时间
@@ -151,7 +195,7 @@ Page({
   getVegetable() { //定义函数名称
     var that = this;
     wx.request({
-      url: 'https://longcz.binzc.com/recipes/searchMenu?str=素菜'  + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
+      url: 'https://longcz.binzc.com/recipes/searchMenu?str=素菜' + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
       method: 'POST',
       data: {},
       header: {
@@ -314,7 +358,7 @@ Page({
 
     for (let i = 0; i < foodMenu.length; i++) {
       let randomFood = [];
-      if (foodMenu[i].type=="main"){
+      if (foodMenu[i].type == "main") {
         randomFood = this.randomFoodMenu(this.data.mainCourse);
       };
       if (foodMenu[i].type == "vegetable") {
@@ -331,15 +375,15 @@ Page({
       };
       randomFood = randomFood.slice(0, 1);
       if (!foodMenu[i].fixed) {
-        for (let j = 0;j<foodMenu.length;j++){
-          if (randomFood[0].id != foodMenu[j].id ){
+        for (let j = 0; j < foodMenu.length; j++) {
+          if (randomFood[0].id != foodMenu[j].id) {
             foodMenu[i]["id"] = randomFood[0].id;
             foodMenu[i]["tags"] = randomFood[0].tags;
             foodMenu[i]["title"] = randomFood[0].title;
             foodMenu[i]["albums"] = randomFood[0].albums;
           }
         };
-        
+
       };
 
       // if (foodMenu[i].id){
@@ -480,11 +524,11 @@ Page({
   //将洗牌后的数组使用传入需要显示的菜单
   setSelectFoodMenu() {
     let selectFood = this.data.selectFood;
-    let selectFoodRandom =[];
-    if (selectFood.type =="main"){
+    let selectFoodRandom = [];
+    if (selectFood.type == "main") {
       selectFoodRandom = this.randomFoodMenu(this.data.mainCourse);
     };
-    if (selectFood.type == "vegetable"){
+    if (selectFood.type == "vegetable") {
       selectFoodRandom = this.randomFoodMenu(this.data.vegetableCourse);
     }
     if (selectFood.type == "cold") {
@@ -525,7 +569,7 @@ Page({
 
 
   //弹窗选择菜品类别
-  selectFoodType(e){
+  selectFoodType(e) {
     let foodType = e.currentTarget.dataset.type;
     let selectFood = this.data.selectFood;
     selectFood.type = foodType
@@ -536,20 +580,24 @@ Page({
   },
 
   //跳转至菜品详情
-  onFoodDetails(event){
+  onFoodDetails(event) {
     let foodId = event.currentTarget.dataset.id;
-    wx.navigateTo({  //子页面跳转
+    wx.navigateTo({ //子页面跳转
       url: "food-detail/food-detail?id=" + foodId
     })
   },
 
   //搜索
-  bindKeyInput(e){
-    wx.navigateTo({  //子页面跳转
+  bindKeyInput(e) {
+    wx.navigateTo({ //子页面跳转
       url: "search/search?val=" + e.detail.value
-    })
-  },
+    });
 
+    this.setData({
+      searchBtn: e.currentTarget.dataset.onbtn
+    });
+
+  },
 
   //事件处理函数
   bindViewTap: function() {
@@ -564,10 +612,7 @@ Page({
       userInfo: {},
       hasUserInfo: false
     })
-
   },
-
-
 
   getUserInfo: function(e) {
     console.log(e)
@@ -577,5 +622,4 @@ Page({
       hasUserInfo: true
     })
   }
-
 })

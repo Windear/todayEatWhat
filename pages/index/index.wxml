@@ -6,7 +6,7 @@
   <view class='search-box'>
     <view class="search">
       <icon type='search' size='20'></icon>
-      <input class='search-input' placeholder="告诉妈妈想吃点啥？" type='text' value='' bindconfirm="bindKeyInput" placeholder-class="placeholder" confirm-type="search"></input>
+      <input class='search-input' placeholder="告诉妈妈想吃点啥？" type='text' value='' bindconfirm="bindKeyInput" placeholder-class="placeholder" confirm-type="search" data-onbtn='{{0}}'></input>
     </view>
   </view>
   <!-- 搜索框 -->
