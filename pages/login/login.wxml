@@ -1,0 +1,17 @@
+<!--pages/login/login.wxml-->
+
+<view class='login-box'>
+  <image class='logo'></image>
+  <text class='login-tip'>允许微信授权后，才可以生成菜单转发哟~</text>
+  <button class='login-btn' open-type='getUserInfo' bindgetuserinfo="bindGetUserInfo">授权登录</button>
+  <button class='pass-btn' bindtap='returnIndex'>返回首页</button>
+</view>
+
+<!-- 背景轮播 -->
+<view class='index_bg'>
+
+  <image class='bg_img' src='/static/img/bg_img@2x.png'></image>
+  <image class='bg_img' src='/static/img/bg_img@2x.png'></image>
+
+</view>
+<!-- 背景轮播 -->

@@ -1,0 +1,26 @@
+<template name="foodTemplate">
+  <scroll-view scroll-y class="detail-container">
+  
+    <view class='list-title'>
+      <text>主料</text>
+    </view>
+    <view class='list-content'>
+      <text class='food-title'>鲶鱼</text>
+      <text class='food-list-num'>500G</text>
+    </view>
+    <view class='list-title'>
+      <text>辅料</text>
+    </view>
+    <view class='list-content'>
+      <text class='food-title'>鲶鱼</text>
+      <text class='food-list-num'>500G</text>
+    </view>
+
+  </scroll-view>
+  <!--关闭按钮-->
+  <view class="close_icon" bindtap="hideModal">
+    <icon type="cancel" size="40" color="#D3DCE6" />
+  </view>
+  <!--关闭按钮-->
+
+</template>

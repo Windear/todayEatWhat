@@ -60,7 +60,7 @@
       <view class='btn_type random_btn' bindtap="randomFoodClick">
         <text>随机选择</text>
       </view>
-      <view class='btn_type ok_btn'>
+      <view class='btn_type ok_btn' bindtap='setFoodsMenu'>
         <text>生成菜单({{foodMenu.length}})</text>
       </view>
     </view>

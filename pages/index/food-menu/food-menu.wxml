@@ -1,0 +1,57 @@
+<!--pages/index/food-menu/food-menu.wxml-->
+<import src="food-modal/food-modal.wxml" />
+
+<view class='user-data'>
+  <image src='{{data.userInfo.avatarUrl}}'></image>
+  <view class='text-box'>
+    <text class='ncik-name'>{{data.userInfo.nickName}} 的菜单</text>
+    <text class='create-time'>{{data.createTime}}</text>
+  </view>
+</view>
+
+<view class='tell-text'>
+  <input type='text' placeholder="说出你想对大厨说的话？" placeholder-class="placeholder-type" value='{{data.tellText}}'></input>
+</view>
+
+
+<view class='food-list-box'>
+  <view class='food-list-title'>
+    <text>菜单</text>
+  </view>
+  <view class='food-list' wx:for="{{data.foodMenu}}" wx:key="food.id" wx:for-item="food" bindtap='onFoodDetails' data-id="{{food.id}}">
+    <view class='list_box'>
+      <image class='food-img' src='{{food.albums}}'></image>
+      <view class='food_tag {{food.type =="vegetable"?"vegetable_food_select":"select_none"}}'>素菜</view>
+      <view class='food_tag {{food.type =="cold"?"cold_food_select":"select_none"}}'>凉菜</view>
+      <view class='food_tag {{food.type =="sweet"?"sweet_food_select":"select_none"}}'>甜点</view>
+      <view class='food_tag {{food.type =="soup"?"soup_food_select":"select_none"}}'>汤</view>
+    </view>
+    <text class='food-title'>{{food.title}}</text>
+  </view>
+</view>
+
+
+<view class='btn-nab'>
+  <view class='btn-box'>
+    <view class='return_btn' bindtap='onDetail'>
+      <image src='/static/img/home.svg' class='home'></image>
+    </view>
+    <view class='red_btn' bindtap='showModal'>
+      <image src='/static/img/food-basket.svg'></image>买菜清单</view>
+    <view class='blue_btn' bindtap=''>
+      <image src='/static/img/share.svg'></image>分享菜单</view>
+  </view>
+</view>
+
+  <!-- 弹出层 -->
+  <view wx:if="{{showModalStatus}}">
+    <template is="foodTemplate" data="" />
+  </view>
+  <!-- 弹出层 -->
+
+  <!--背景遮罩-->
+  <view class="modalMask" bindtap="hideModal" wx:if="{{showModalStatus}}"></view>
+  <!--背景遮罩-->
+
+
+<view class='top_bg'></view>

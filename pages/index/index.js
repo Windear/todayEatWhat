@@ -66,7 +66,7 @@ Page({
     //     }
     //   })
     // };
-    console.log(app.globalData.userInfo);
+    //console.log(app.globalData.userInfo);
 
     this.setTime();
     this.getdata();
@@ -84,28 +84,28 @@ Page({
   },
 
   //登录
-  getUser(){
-   
+  getUser() {
+
   },
 
   //或取搜索页面传回来的参数并添加到列表中并固定
-  setSearchFood(){
+  setSearchFood() {
     let value = wx.getStorageSync('selectFoodVal');
     let foodMenu = this.data.foodMenu;
     let selectFood = this.data.selectFood;
     let searchBtn = this.data.searchBtn;
     //console.log(searchBtn);
-    if (searchBtn===0){
+    if (searchBtn === 0) {
       //将传过来的参数直接添加到foodMenu并固定
-      value['index'] = foodMenu[foodMenu.length-1].index +1;
+      value['index'] = foodMenu[foodMenu.length - 1].index + 1;
       value['fixed'] = true;
       value['type'] = "main";
       //console.log(value);
       foodMenu.push(value);
       this.setData({
-        foodMenu: foodMenu,      
+        foodMenu: foodMenu,
       });
-    } else if (searchBtn === 1){
+    } else if (searchBtn === 1) {
       //将传过来的参数添加到selectFood并固定
       selectFood.fixed = true;
       selectFood.id = value.id;
@@ -599,6 +599,82 @@ Page({
 
   },
 
+  //生成菜单
+  setFoodsMenu() {
+    //判断是否登录授权。
+    wx.getSetting({
+      success: res => {
+        //如果有直接跳转到生成菜单页面
+        //如果没有跳转至登录页面
+        if (res.authSetting['scope.userInfo']) {
+          wx.getUserInfo({
+            success: res => {
+              // 可以将 res 发送给后台解码出 unionId
+              app.globalData.userInfo = res.userInfo
+
+              // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+              // 所以此处加入 callback 以防止这种情况
+              if (app.userInfoReadyCallback) {
+                app.userInfoReadyCallback(res)
+              }
+              //this.onAdd();
+              wx.navigateTo({
+                url: "food-menu/food-menu?_id=" + "W9qcfbdokuiPuJFc"
+              })
+            }
+            
+          })
+
+          //
+
+        } else {
+
+          wx.navigateTo({
+            url: '../login/login'
+          })
+        }
+      }
+    })
+
+
+  },
+
+  //数据库的增加
+  onAdd() {
+    //app.globalData.userInfo = scope.userInfo
+    let openid = app.globalData.openid
+    let createTime = util.formatTime(new Date());
+    //数据存储成功后跳转至菜单页面
+    let data = {
+      openid: openid,
+      createTime: createTime,
+      tellText: '',
+      foodMenu: this.data.foodMenu,
+      userInfo: app.globalData.userInfo
+    };
+    //console.log(data)
+    const db = wx.cloud.database()
+    db.collection('userFoodMenu').add({
+      data: data,
+      success: res => {
+        // 在返回结果中会包含新创建的记录的 _id      
+        wx.navigateTo({
+          url: "food-menu/food-menu?_id=" + res._id
+        })
+        console.log('[数据库] [新增记录] 成功: ', res._id)
+      },
+      fail: err => {
+        wx.showToast({
+          icon: 'none',
+          title: '网络不佳，请稍后再试。'
+        })
+        console.error('[数据库] [新增记录] 失败：', err)
+      }
+    })
+  },
+
+
+
   //事件处理函数
   bindViewTap: function() {
     wx.navigateTo({
@@ -613,6 +689,9 @@ Page({
       hasUserInfo: false
     })
   },
+
+
+
 
   getUserInfo: function(e) {
     console.log(e)

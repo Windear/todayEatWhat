@@ -2,7 +2,9 @@
   "pages":[
     "pages/index/index",
     "pages/index/food-detail/food-detail",
+    "pages/index/food-menu/food-menu",
     "pages/index/search/search",
+    "pages/login/login",
     "pages/logs/logs"
   ],
   "window":{
@@ -10,5 +12,6 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle":"black"
-  }
+  },
+  "cloud": true
 }
