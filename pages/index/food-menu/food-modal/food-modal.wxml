@@ -4,16 +4,16 @@
     <view class='list-title'>
       <text>主料</text>
     </view>
-    <view class='list-content'>
-      <text class='food-title'>鲶鱼</text>
-      <text class='food-list-num'>500G</text>
+    <view class='list-content' wx:for="{{ingredientsList}}" wx:key="ingredient.id" wx:for-item="ingredient">
+      <text class='food-title'>{{ingredient.name}}</text>
+      <text class='food-list-num'>{{ingredient.use}}</text>
     </view>
     <view class='list-title'>
       <text>辅料</text>
     </view>
-    <view class='list-content'>
-      <text class='food-title'>鲶鱼</text>
-      <text class='food-list-num'>500G</text>
+    <view class='list-content' wx:for="{{burdenList}}" wx:key="burden.id" wx:for-item="burden">
+      <text class='food-title'>{{burden.name}}</text>
+      <text class='food-list-num'>{{burden.use}}</text>
     </view>
 
   </scroll-view>

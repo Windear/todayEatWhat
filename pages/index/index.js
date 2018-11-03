@@ -617,10 +617,10 @@ Page({
               if (app.userInfoReadyCallback) {
                 app.userInfoReadyCallback(res)
               }
-              //this.onAdd();
-              wx.navigateTo({
-                url: "food-menu/food-menu?_id=" + "W9qcfbdokuiPuJFc"
-              })
+              this.onAdd();
+              // wx.navigateTo({
+              //   url: "food-menu/food-menu?_id=" + "W9qcfbdokuiPuJFc"
+              // })
             }
             
           })
@@ -661,7 +661,7 @@ Page({
         wx.navigateTo({
           url: "food-menu/food-menu?_id=" + res._id
         })
-        console.log('[数据库] [新增记录] 成功: ', res._id)
+        //console.log('[数据库] [新增记录] 成功: ', res._id)
       },
       fail: err => {
         wx.showToast({
@@ -688,6 +688,33 @@ Page({
       userInfo: {},
       hasUserInfo: false
     })
+  },
+
+  //定义转发
+  onShareAppMessage: function (ops) {
+    let _id = this.data._id;
+    if (ops.from === 'button') {
+      // 来自页面内转发按钮
+      //console.log(ops.target)
+    }
+    return {
+      title: '今天回家吃什么？',
+      path: 'pages/index/index',
+      success: function (res) {
+        wx.showShareMenu({
+          // 要求小程序返回分享目标信息
+          withShareTicket: true
+        });
+
+        // 转发成功
+        //console.log("转发成功:" + JSON.stringify(res));
+      },
+      fail: function (res) {
+        // 转发失败
+        //console.log("转发失败:" + JSON.stringify(res));
+      }
+    }
+
   },
 
 

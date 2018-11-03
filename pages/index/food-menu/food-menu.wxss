@@ -1,5 +1,7 @@
 /* pages/index/food-menu/food-menu.wxss */
 @import "food-modal/food-modal.wxss";
+
+
 .top_bg {
   background: linear-gradient(0deg, rgba(255, 164, 164, 0.00) 0%, #ff6b6b 51%);
   position: absolute;
@@ -10,8 +12,8 @@
 }
 
 .user-data {
-  width: 100%;
-  padding: 20px 20px 10px;
+  /* width: 100%; */
+  margin: 20px 20px 10px;
   display: flex;
 }
 
@@ -50,7 +52,7 @@
 
 .tell-text input {
   height: 50px;
-  width: 100%;
+  /* width: 100%; */
   padding: 0 20px;
 }
 
@@ -146,6 +148,9 @@
   bottom: 0;
   z-index: 999;
   height: 60px;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
 }
 
 .btn-box {
@@ -155,13 +160,18 @@
   color: #fff;
   font-size: 16px;
   height: 40px;
+  /* width: 290px; */
 }
+
 .btn-box image{
   width: 20px;
   height: 20px;
   margin-right: 5px;
 }
-
+button{
+  margin: 0;
+  padding: 0;
+}
 .home{
 margin-right:0!important;
 }
@@ -180,7 +190,7 @@ margin-right:0!important;
 .red_btn {
   background: linear-gradient(to bottom right, rgba(245, 81, 95, 1), rgba(255, 174, 186, 1));
   height: 40px;
-  width: 135px;
+  width: 48%;
   border-radius: 20px;
   line-height: 40px;
   text-align: center;
@@ -193,7 +203,7 @@ margin-right:0!important;
 .blue_btn {
   background: linear-gradient(to bottom right, rgba(0, 108, 255, 1), rgba(32, 190, 255, 1));
   height: 40px;
-  width: 135px;
+  width: 48%;
   border-radius: 20px;
   line-height: 40px;
   text-align: center;
@@ -201,4 +211,17 @@ margin-right:0!important;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #fff;
+   font-size: 16px;
+}
+
+
+/* 回到首页,固定定位,悬浮 */
+.d-back-home {
+  position: fixed;
+  width: 96rpx;
+  height: 96rpx;
+  right: 30rpx;
+  bottom: 166rpx;
+  z-index: 10000;
 }
