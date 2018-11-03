@@ -29,7 +29,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function() {
-
+    
   },
 
   /**
@@ -88,7 +88,8 @@ Page({
         this.setData({
           data: data,
         })
-        console.log(data)
+        console.log(data);
+        this.getFoodMaterial();
       },
       fail: err => {
         wx.showToast({
@@ -98,6 +99,65 @@ Page({
         console.error('[数据库] [查询记录] 失败：', err)
       }
     })
+  },
+
+  //获取食材数据
+  getFoodMaterial(){
+    let foodList = this.data.data.foodMenu;
+    let mainMaterial, accessories = new Array;
+    //遍历出每个菜品的id号
+    for (let i = 0;i<foodList.length;i++){
+      let foodid = foodList[i].id;
+      let material = this.getdata(foodid);
+      //console.log(material);
+      //mainMaterial.push(material.ingredients);
+      //accessories.push(material.hurden);
+    }
+    //console.log(mainMaterial);
+  },
+
+  //获取数据
+  getdata(id,callback) { //定义函数名称
+    var that = this;
+    // let  mainMaterial = {};
+    let mainMaterial = ""; 
+    wx.request({
+      url: 'https://longcz.binzc.com/recipes/getMenuById?id=' + id, //仅为示例，并非真实的接口地址
+      method: 'POST',
+      data: {},
+      //async: false,
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        let foodDetail = res.data;
+        //辅料
+        let burden = that.arrayJson(foodDetail.burden);
+        //主料
+        let ingredients = that.arrayJson(foodDetail.ingredients);
+        mainMaterial = {
+          burden: burden,
+          ingredients: ingredients,
+        };
+        that.mainMaterial = mainMaterial;
+        //return mainMaterial;
+      }
+    }) 
+    console.log(mainMaterial) ;
+  },
+
+  //加引号的字段转化为数组
+  arrayJson(credentials) {
+    if (credentials == null || credentials == '' || credentials === ' ') {
+      credentials = [];
+    } else if (credentials.indexOf(',') == - 1 && credentials.indexOf('.') > - 1) {
+      var tempImg = [];
+      tempImg.push(JSON.parse(credentials));
+      credentials = tempImg;
+    } else if (credentials.indexOf(',') > - 1) {
+      credentials = JSON.parse(credentials);
+    }
+    return credentials;
   },
 
 
