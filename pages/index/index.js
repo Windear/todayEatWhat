@@ -406,7 +406,6 @@ Page({
   //关闭弹出框
   hideModal: function() {
     this.setData({
-
       showModalStatus: false
     })
 

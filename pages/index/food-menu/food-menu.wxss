@@ -1,6 +1,6 @@
 /* pages/index/food-menu/food-menu.wxss */
 @import "food-modal/food-modal.wxss";
-
+@import "share-modal/share-modal.wxss";
 
 .top_bg {
   background: linear-gradient(0deg, rgba(255, 164, 164, 0.00) 0%, #ff6b6b 51%);

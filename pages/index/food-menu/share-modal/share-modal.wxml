@@ -1,0 +1,24 @@
+<template name="shareTemplate">
+
+  <view class='canvas-box' hidden='{{!showCanvasImg}}'>
+    <image src="{{imagePath}}"></image>
+  </view>
+
+  <view class='canvas-boxes'>
+    <canvas canvas-id='canvas_poster' style="width: 260px; height: 388px;"></canvas>
+  </view>
+
+  <view class='share-box'>
+    <text class='share-title'>分享</text>
+    <view class='share-btn-box'>
+      <button class='share' bindtap='baocun'>
+        <image class='img-btn-icon' src='/static/img/download_icon.svg'></image>
+        保存分享海报
+      </button>
+      <button class='share' open-type="share">
+        <image class='img-btn-icon' src='/static/img/wechat_icon.svg'></image>
+        转发给好友
+      </button>
+    </view>
+  </view>
+</template>

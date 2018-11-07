@@ -7,9 +7,13 @@ Page({
    */
   data: {
     showModalStatus: false,
+    showShareModalStatus: false,
     ingredientsList: [],
     burdenList: [],
     isshare: 0,
+    isUser: false,
+    showCanvasImg: false,
+    tipText:"最难忘的还是妈妈的味道！",
   },
 
   /**
@@ -27,12 +31,12 @@ Page({
     });
     this.getFoodMenu();
 
-    //console.log(options.isshare)
+    //判断是否从分享页面打开
     if (options.isshare == 1) {
       this.setData({
         isshare: options.isshare
       });  
-    }  
+    }; 
 
   },
 
@@ -47,6 +51,23 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function() {
+    
+    let that = this;
+    //获取头像图片
+    let touxiang = app.globalData.userInfo.avatarUrl;
+    //将头像保存到临时文件夹
+    wx.downloadFile({
+      url: touxiang, // 网络返回的图片地址
+      fail: function (err) {
+        console.log(err)
+      },
+      success: function (res) {
+        that.setData({
+          userImagePath: res.tempFilePath,
+        });
+        //console.log(res.tempFilePath)
+      }
+    });
 
   },
 
@@ -99,8 +120,15 @@ Page({
         this.setData({
           data: data,
         })
-        //console.log(data);
+        //判断是否为当前用户的菜单
+        if (app.globalData.openid === data._openid) {
+          this.setData({
+            isUser: true,
+          })
+        }
+        console.log(data);
         this.getFoodMaterial();
+
       },
       fail: err => {
         wx.showToast({
@@ -180,7 +208,6 @@ Page({
     return credentials;
   },
 
-
   //打开弹出框
   showModal() {
     this.setData({
@@ -191,11 +218,42 @@ Page({
   //关闭弹出框
   hideModal: function() {
     this.setData({
-
       showModalStatus: false
     })
-
   },
+
+  //打开分享弹出框
+  showShare() {
+    var that = this;
+    if (!this.data.imagePath) {
+      this.setData({
+        showShareModalStatus: true
+      })
+      wx.showToast({
+        title: '生成图片中',
+        icon: 'loading',
+        duration: 1000
+      });
+      setTimeout(function() {
+        wx.hideToast()
+        that.showCanvas();
+      }, 1000)
+    } else {
+      this.setData({
+        showShareModalStatus: true
+      })
+    }
+    //this.showCanvas();
+  },
+
+  //关闭分享弹出框
+  hideShare() {
+    this.setData({
+      showShareModalStatus: false
+    })
+  },
+
+
 
   //跳转至菜品详情
   onFoodDetails(event) {
@@ -231,6 +289,7 @@ Page({
     })
   },
 
+  //转发按钮
   onShareAppMessage: function(ops) {
     let _id = this.data._id;
     if (ops.from === 'button') {
@@ -257,8 +316,8 @@ Page({
 
   },
 
-  //
-  bindKeyInput(e){
+  //修改给妈妈的话input
+  bindKeyInput(e) {
     const db = wx.cloud.database()
     db.collection('userFoodMenu').doc(this.data._id).update({
       // data 传入需要局部更新的数据
@@ -266,16 +325,125 @@ Page({
         // 表示将 done 字段置为 true
         tellText: e.detail.value
       },
-      success: function (res) {
+      success: function(res) {
         //console.log(res)
       }
     })
   },
 
-  backHome: function () {
+  backHome: function() {
     wx.reLaunch({
       url: '/pages/index/index'
     })
-  }
+  },
+
+  //canvas画图
+  showCanvas() {
+    let that = this;
+    let userImg = that.data.userImagePath;
+    let tipText = that.data.tipText;
+    let tellText = that.data.data.tellText;
+    //判断想跟妈妈说的话是否为空
+    if (!tellText){
+      tipText = that.data.tipText;
+    }else{
+      tipText = that.data.data.tellText;
+    };
+    //console.log(userImg)
+    const ctx = wx.createCanvasContext('canvas_poster');
+    ctx.clearRect(0, 0, 0, 0);
+    //设置画布背景
+    ctx.setFillStyle("#fff");
+    //设置画布尺寸
+    ctx.fillRect(0, 0, 260, 393);
+    //绘制图片模板的展示图
+    ctx.drawImage('/static/img/poster_bg.png', 0, 0, 260, 260);
+    ctx.save(); // 保存当前context的状态
+
+
+    //画出圆头像
+    ctx.beginPath();
+    ctx.arc(26, 286, 20, 0, 2 * Math.PI); //画出圆
+    //ctx.setFillStyle('#fff');
+    ctx.clip(); //裁剪上面的圆形
+    ctx.drawImage(userImg, 10, 270, 40, 40);
+    ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 还可以继续绘制
+
+    //画出显示文字
+    ctx.setFontSize(16);
+    ctx.setFillStyle('#1F2D3D');
+    ctx.fillText(tipText, 60, 285,190);
+    //画出用户名
+    ctx.setFontSize(12);
+    ctx.setFillStyle('#8492A6');
+    ctx.fillText(app.globalData.userInfo.nickName, 60, 307, 190);
+    //画一条线
+    ctx.setFillStyle('#E0E6ED');
+    ctx.fillRect(10, 320, 240, 1);
+    //写提示文字
+    ctx.setFontSize(10);
+    ctx.setFillStyle('#8492A6');
+    ctx.fillText('长按小程序码', 10, 350, 190);
+    ctx.setFontSize(10);
+    ctx.setFillStyle('#8492A6');
+    ctx.fillText('查看好友今天想吃些啥？', 10, 365, 190);
+    //画出小程序码
+    ctx.drawImage('/static/img/appCode.jpg', 200, 330, 50, 50);
+    ctx.save(); 
+    //不知道是什么原因，手机环境能正常显示
+
+    ctx.draw();
+
+    //将生成好的图片保存到本地，需要延迟一会，绘制期间耗时
+    setTimeout(function() {
+      wx.canvasToTempFilePath({
+        canvasId: 'canvas_poster',
+        success: function(res) {
+          var tempFilePath = res.tempFilePath;
+          that.setData({
+            imagePath: tempFilePath,
+            showCanvasImg: true
+          });
+          //console.log(that.data.imagePath);
+        },
+        fail: function(res) {
+          console.log(res);
+        }
+      });
+    }, 200);
+
+  },
+
+
+
+  //生成海报的封面图缓存到本地
+
+  //保存图片至相册
+  baocun: function () {
+    var that = this
+    wx.saveImageToPhotosAlbum({
+      filePath: that.data.imagePath,
+      success(res) {
+        wx.showModal({
+          content: '图片已保存到相册，赶紧晒一下吧~',
+          showCancel: false,
+          confirmText: '好的',
+          confirmColor: '#333',
+          success: function (res) {
+            if (res.confirm) {
+              console.log('用户点击确定');
+              /* 该隐藏的隐藏 */
+              that.setData({
+                showShareModalStatus: false
+              })
+            }
+          }, fail: function (res) {
+            console.log(11111)
+          }
+        })
+      }
+    })
+  },
+
 
 })
