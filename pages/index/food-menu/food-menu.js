@@ -373,6 +373,7 @@ Page({
     let userImg = that.data.userImagePath;
     let tipText = that.data.tipText;
     let tellText = that.data.tellText;
+    var img = `/static/img/poster_bg` + Math.floor(Math.random() * 6) +`.png`;
     //判断想跟妈妈说的话是否为空
     if (!tellText) {
       tipText = that.data.tipText;
@@ -387,7 +388,9 @@ Page({
     //设置画布尺寸
     ctx.fillRect(0, 0, 260, 393);
     //绘制图片模板的展示图
-    ctx.drawImage('/static/img/poster_bg.png', 0, 0, 260, 260);
+
+    // console.log(img)
+    ctx.drawImage(img, 0, 0, 260, 260);
     ctx.save(); // 保存当前context的状态
 
 
