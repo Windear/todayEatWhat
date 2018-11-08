@@ -13,7 +13,7 @@ Page({
     isshare: 0,
     isUser: false,
     showCanvasImg: false,
-    tipText:"最难忘的还是妈妈的味道！",
+    tipText: "最难忘的还是妈妈的味道！",
   },
 
   /**
@@ -22,13 +22,26 @@ Page({
   onLoad: function(options) {
     // 页面初始化 options为页面跳转所带来的参数
     var _id = options._id; //获取页面跳转传过来的参数
-    //console.log(foodId);
-    this.setData({
-      _id: _id
-    });
+    const scene = decodeURIComponent(options.scene);//获取小程序码页面跳转传过来的参数
+
+    if (_id){
+      this.setData({
+        _id: _id
+      });
+    }else if (scene){
+      this.setData({
+        _id: scene,
+        isshare:1
+      });
+    };
+
+    this.getCodeImg();
+  
+
     wx.setNavigationBarTitle({
       title: "回家吃菜单"
     });
+
     this.getFoodMenu();
 
     //判断是否从分享页面打开
@@ -38,7 +51,11 @@ Page({
       });  
     }; 
 
+    
+
   },
+
+  
 
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -51,24 +68,26 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function() {
-    
     let that = this;
+    let isshare = this.data.isshare;
     //获取头像图片
-    let touxiang = app.globalData.userInfo.avatarUrl;
-    //将头像保存到临时文件夹
-    wx.downloadFile({
-      url: touxiang, // 网络返回的图片地址
-      fail: function (err) {
-        console.log(err)
-      },
-      success: function (res) {
-        that.setData({
-          userImagePath: res.tempFilePath,
-        });
-        //console.log(res.tempFilePath)
-      }
-    });
-
+    
+    if (isshare==0){
+      let touxiang = app.globalData.userInfo.avatarUrl;
+      //将头像保存到临时文件夹
+      wx.downloadFile({
+        url: touxiang, // 网络返回的图片地址
+        fail: function (err) {
+          console.log(err)
+        },
+        success: function (res) {
+          that.setData({
+            userImagePath: res.tempFilePath,
+          });
+          //console.log(res.tempFilePath)
+        }
+      });
+    }
   },
 
   /**
@@ -82,7 +101,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function() {
-
+    this.deleteCodeImg();
   },
 
   /**
@@ -108,36 +127,40 @@ Page({
 
   //获取菜单数据
   getFoodMenu() {
-    const db = wx.cloud.database()
-    // 查询当前用户所有的 counters
-    db.collection('userFoodMenu').where({
-      _id: this.data._id
-    }).get({
-      success: res => {
-        // console.log(res);
-        let data = res.data[0];
+    const db = wx.cloud.database();
+    let _id = this.data._id;
+    if (_id){
+      // 查询当前用户所有的 counters
+      db.collection('userFoodMenu').where({
+        _id: this.data._id
+      }).get({
+        success: res => {
+          // console.log(res);
+          let data = res.data[0];
 
-        this.setData({
-          data: data,
-        })
-        //判断是否为当前用户的菜单
-        if (app.globalData.openid === data._openid) {
           this.setData({
-            isUser: true,
+            data: data,
           })
-        }
-        console.log(data);
-        this.getFoodMaterial();
+          //判断是否为当前用户的菜单
+          if (app.globalData.openid === data._openid) {
+            this.setData({
+              isUser: true,
+            })
+          }
+          //console.log(data);
+          this.getFoodMaterial();
 
-      },
-      fail: err => {
-        wx.showToast({
-          icon: 'none',
-          title: '网络不佳，请稍后再试'
-        })
-        console.error('[数据库] [查询记录] 失败：', err)
-      }
-    })
+        },
+        fail: err => {
+          wx.showToast({
+            icon: 'none',
+            title: '网络不佳，请稍后再试'
+          })
+          console.error('[数据库] [查询记录] 失败：', err)
+        }
+      })
+    }
+    
   },
 
   //获取食材数据
@@ -229,14 +252,17 @@ Page({
       this.setData({
         showShareModalStatus: true
       })
+      
       wx.showToast({
         title: '生成图片中',
         icon: 'loading',
         duration: 1000
       });
       setTimeout(function() {
-        wx.hideToast()
-        that.showCanvas();
+
+          wx.hideToast();
+          that.showCanvas();
+
       }, 1000)
     } else {
       this.setData({
@@ -318,6 +344,7 @@ Page({
 
   //修改给妈妈的话input
   bindKeyInput(e) {
+    let that = this;
     const db = wx.cloud.database()
     db.collection('userFoodMenu').doc(this.data._id).update({
       // data 传入需要局部更新的数据
@@ -325,8 +352,11 @@ Page({
         // 表示将 done 字段置为 true
         tellText: e.detail.value
       },
+
       success: function(res) {
-        //console.log(res)
+        that.setData({
+          tellText: e.detail.value
+        });
       }
     })
   },
@@ -342,12 +372,12 @@ Page({
     let that = this;
     let userImg = that.data.userImagePath;
     let tipText = that.data.tipText;
-    let tellText = that.data.data.tellText;
+    let tellText = that.data.tellText;
     //判断想跟妈妈说的话是否为空
-    if (!tellText){
+    if (!tellText) {
       tipText = that.data.tipText;
-    }else{
-      tipText = that.data.data.tellText;
+    } else {
+      tipText = that.data.tellText;
     };
     //console.log(userImg)
     const ctx = wx.createCanvasContext('canvas_poster');
@@ -372,7 +402,7 @@ Page({
     //画出显示文字
     ctx.setFontSize(16);
     ctx.setFillStyle('#1F2D3D');
-    ctx.fillText(tipText, 60, 285,190);
+    ctx.fillText(tipText, 60, 285, 190);
     //画出用户名
     ctx.setFontSize(12);
     ctx.setFillStyle('#8492A6');
@@ -388,8 +418,9 @@ Page({
     ctx.setFillStyle('#8492A6');
     ctx.fillText('查看好友今天想吃些啥？', 10, 365, 190);
     //画出小程序码
-    ctx.drawImage('/static/img/appCode.jpg', 200, 330, 50, 50);
-    ctx.save(); 
+    
+    ctx.drawImage(that.data.codeImagePath, 200, 330, 50, 50);
+    ctx.save();
     //不知道是什么原因，手机环境能正常显示
 
     ctx.draw();
@@ -416,10 +447,58 @@ Page({
 
 
 
-  //生成海报的封面图缓存到本地
+  //获取小程序二维码
+  getCodeImg() {
+    let that = this;
+    let id = this.data._id;
+    wx.cloud.callFunction({
+      name: 'token',
+      data: {    // 小程序码所需的参数
+        page: "pages/index/food-menu/food-menu",
+        id: id,
+      },
+      complete: res => {
+        //console.log(id);
+        console.log(res);
+        
+        let appcode = res.result.code_add;
+        let codeID = res.result.fileID;
+        //console.log(appcode)
+        wx.downloadFile({
+          url: appcode, // 网络返回的图片地址
+          fail: function (err) {
+            console.log(err)
+          },
+          success: function (res) {
+            that.setData({
+              codeImagePath: res.tempFilePath,
+              fileID: codeID
+            });
+            //console.log(res.tempFilePath)
+          }
+        });
+      }
+    });
+    
+  },
+
+  //结束后删除上传的code
+  deleteCodeImg() {
+    let that = this;
+    wx.cloud.callFunction({
+      name: 'deleteCodeImg',
+      data: {    // 小程序码所需的参数
+        fileId: that.data.fileID
+      },
+      complete: res => {
+        console.log(res);
+      }
+    });
+
+  },
 
   //保存图片至相册
-  baocun: function () {
+  baocun: function() {
     var that = this
     wx.saveImageToPhotosAlbum({
       filePath: that.data.imagePath,
@@ -429,7 +508,7 @@ Page({
           showCancel: false,
           confirmText: '好的',
           confirmColor: '#333',
-          success: function (res) {
+          success: function(res) {
             if (res.confirm) {
               console.log('用户点击确定');
               /* 该隐藏的隐藏 */
@@ -437,7 +516,8 @@ Page({
                 showShareModalStatus: false
               })
             }
-          }, fail: function (res) {
+          },
+          fail: function(res) {
             console.log(11111)
           }
         })

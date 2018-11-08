@@ -19,6 +19,7 @@
   <view class='food-list-title'>
     <text>菜单</text>
   </view>
+  <text wx:if="{{!_id}}" style='width:100%;text-align: center;'>出错啦，暂无数据。请返回。</text>
   <view class='food-list' wx:for="{{data.foodMenu}}" wx:key="food.id" wx:for-item="food" bindtap='onFoodDetails' data-id="{{food.id}}">
     <view class='list_box'>
       <image class='food-img' src='{{food.albums}}'></image>
@@ -43,8 +44,11 @@
       <image src='/static/img/food-basket.svg'></image>买菜清单</view>
 
     <!-- <button class='blue_btn' open-type="share"> -->
-     <view class='blue_btn' bindtap='showShare'>
+     <view class='blue_btn' bindtap='showShare' wx:if="{{isshare!=1}}">
       <image src='/static/img/share.svg'></image>分享菜单
+      </view>
+       <view class='blue_btn' bindtap='backHome' wx:if="{{isshare==1}}">
+      <image src='/static/img/home.svg'></image>我也要点菜
       </view>
     <!-- </button> -->
   </view>
@@ -68,6 +72,6 @@
   <!--背景遮罩-->
 
   <!-- 回到首页(分享的时候显示) -->
-<image wx:if="{{isshare==1}}" bindtap='backHome' class='d-back-home' src='http://p8e12hdcc.bkt.clouddn.com/icon-Return%20to%20the%20home%20page.png' lazy-load></image>
+<!-- <image wx:if="{{isshare==1}}" bindtap='backHome' class='d-back-home' src='http://p8e12hdcc.bkt.clouddn.com/icon-Return%20to%20the%20home%20page.png' lazy-load></image> -->
 
 <view class='top_bg'></view>

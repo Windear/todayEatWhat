@@ -1,10 +1,6 @@
 //app.js
 App({
   onLaunch: function () {
-
-
-
-
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -34,5 +30,7 @@ App({
   globalData: {
     userInfo: null,
     openid: null,
+    AppId:'wxcf3e54c49f32683c',
+    AppSecret:'da40805b4b57b246f96617cf01082fed'
   }
 })
