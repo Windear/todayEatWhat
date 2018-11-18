@@ -1,0 +1,33 @@
+<!--pages/mine/mine.wxml-->
+<!-- 顶部用户栏 -->
+<view class='user_box'>
+  <view class='user_box_list' wx:if='{{!login}}' catchtap='clickLogin'>
+    <image class='user_img' src='/static/img/logo.png'></image>
+    <text class='user_name'>点击登录</text>
+  </view>
+  <view class='user_box_list' wx:if='{{login}}'>
+    <image class='user_img' src='{{userImg}}'></image>
+    <text class='user_name'>{{userName}}</text>
+  </view>
+  <view class='user_box_share' wx:if='{{login}}'>
+    <image src='/static/img/share.svg'></image>
+  </view>
+  <image class='user_box_bg' src='/static/img/mine_bg.svg'></image>
+</view>
+<!-- 顶部用户栏 -->
+<!-- 列表栏 -->
+
+<view class='history_list' wx:for="{{list}}" wx:key="list._id" wx:for-item="item" bindtap='toFoodMenu' data-id='{{item._id}}'>
+  <view class='food_img_list_box'>
+    <image class='food_img {{"food_img_" + (index+1)}}' wx:for="{{item.foodMenu}}"  wx:key="item.foodMenu.id" wx:for-item="img" src='{{img.albums}}' wx:if="{{index < 3}}"></image>
+    <image class='food_img food_img_more' src='/static/img/more_food.svg' wx:if='{{item.foodMenu.length>3}}'></image>
+  </view>
+  <view class='food_text_box'>
+    <text class='food_text_name' wx:if='{{item.hour >= 3 && item.hour < 10}}'>早餐</text>
+    <text class='food_text_name' wx:if='{{item.hour >= 10 && item.hour < 14}}'>中餐</text>
+    <text class='food_text_name' wx:if='{{item.hour >= 14 && item.hour < 23 ||item.hour <3}}'>晚餐</text>
+    <text class='food_text_time'>{{item.createTime}}</text>
+  </view>
+</view>
+
+<!-- 列表栏 -->

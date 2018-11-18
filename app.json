@@ -4,6 +4,7 @@
     "pages/index/food-detail/food-detail",
     "pages/index/food-menu/food-menu",
     "pages/index/search/search",
+    "pages/mine/mine",
     "pages/login/login",
     "pages/logs/logs"
   ],
@@ -12,6 +13,26 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle":"black"
+  },
+  "tabBar": {
+    "color": "#b0b0b0",
+    "selectedColor": "#fa5b4d",
+    "borderStyle": "white",
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/img/eatWhat_un_icon.png",
+        "selectedIconPath": "static/img/eatWhat_ok_icon.png",
+        "text": "吃啥呢"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "iconPath": "static/img/eatHistory_un_icon.png",
+        "selectedIconPath": "static/img/eatHistory_ok_icon.png",
+        "text": "吃过啥"
+      }
+    ]
   },
   "cloud": true
 }

@@ -105,8 +105,8 @@ Page({
 
   //点击返回首页
   returnIndex() {
-    wx.navigateBack({
-      delta: 1
+    wx.reLaunch({
+      url: '/pages/index/index'
     })
   },
 })

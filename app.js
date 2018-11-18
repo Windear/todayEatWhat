@@ -30,7 +30,5 @@ App({
   globalData: {
     userInfo: null,
     openid: null,
-    AppId:'wxcf3e54c49f32683c',
-    AppSecret:'da40805b4b57b246f96617cf01082fed'
   }
 })
