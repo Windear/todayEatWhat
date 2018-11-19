@@ -24,10 +24,15 @@
   </view>
   <view class='food_text_box'>
     <text class='food_text_name' wx:if='{{item.hour >= 3 && item.hour < 10}}'>早餐</text>
-    <text class='food_text_name' wx:if='{{item.hour >= 10 && item.hour < 14}}'>中餐</text>
-    <text class='food_text_name' wx:if='{{item.hour >= 14 && item.hour < 23 ||item.hour <3}}'>晚餐</text>
+    <text class='food_text_name' wx:if='{{item.hour >= 10 && item.hour < 16}}'>中餐</text>
+    <text class='food_text_name' wx:if='{{item.hour >= 16 && item.hour < 23 ||item.hour <3}}'>晚餐</text>
     <text class='food_text_time'>{{item.createTime}}</text>
   </view>
+</view>
+
+<view class='loading_box'>
+  <view class='loading' hidden='{{!showLoading}}'><image src='/static/img/loading.svg'></image><text >正在加载</text></view>
+  <text class='loading_over' hidden='{{hasMore}}'>————✨  就吃过这么些东西了  ✨————</text>
 </view>
 
 <!-- 列表栏 -->

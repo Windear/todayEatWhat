@@ -2,5 +2,6 @@
   "backgroundTextStyle": "light",
   "navigationBarBackgroundColor": "#FF6B6B",
   "navigationBarTitleText": "曾经吃了啥",
-  "navigationBarTextStyle": "#fff"
+  "navigationBarTextStyle": "#fff",
+  "enablePullDownRefresh": true
 }

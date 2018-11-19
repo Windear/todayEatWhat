@@ -1,6 +1,5 @@
 /* pages/mine/mine.wxss */
 
-
 .user_box {
   height: 80px;
   background: #ff6b6b;
@@ -22,7 +21,7 @@
 .user_box_list {
   display: flex;
   align-items: center;
-  z-index:1;
+  z-index: 1;
 }
 
 .user_name {
@@ -31,7 +30,6 @@
   font-size: 14px;
   color: #fff;
   letter-spacing: 0;
-  
 }
 
 .user_img {
@@ -54,7 +52,7 @@
   align-items: center;
   padding: 0 20px;
   height: 60px;
-  border-bottom: 1rpx solid #E0E6ED;
+  border-bottom: 1rpx solid #e0e6ed;
 }
 
 .food_img_list_box {
@@ -71,18 +69,28 @@
   position: relative;
 }
 
-.food_img_1{
-  z-index: 4;left:0px;background:red;
+.food_img_1 {
+  z-index: 4;
+  left: 0px;
+  background: red;
 }
-.food_img_2{
-  z-index: 3;left:-20px;
+
+.food_img_2 {
+  z-index: 3;
+  left: -20px;
 }
-.food_img_3{
-  z-index: 2;left:-40px;background:blue;
+
+.food_img_3 {
+  z-index: 2;
+  left: -40px;
+  background: blue;
 }
-.food_img_more{
- z-index: 0;left:-60px;
+
+.food_img_more {
+  z-index: 0;
+  left: -60px;
 }
+
 .food_text_box {
   display: flex;
   flex-direction: column;
@@ -103,3 +111,31 @@
   letter-spacing: 0;
   text-align: center;
 }
+
+.loading_box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 44px;
+}
+
+.loading_box text {
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #99a9bf;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.loading{
+  display: flex;
+  align-items: center;
+}
+
+.loading image{
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+}
+

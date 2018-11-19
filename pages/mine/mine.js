@@ -8,6 +8,14 @@ Page({
    */
   data: {
     login: false,
+    //默认请求第一页
+    pageIndex:1,
+    //数据列表
+    list:[],
+    //是否显示加载完成
+    showLoading:true,
+    //是否后台还有数据
+    hasMore:true
   },
 
   /**
@@ -16,6 +24,7 @@ Page({
   onLoad: function(options) {
     //判断是否登录
     //this.judgeLogin();
+   
   },
 
   /**
@@ -23,7 +32,8 @@ Page({
    */
   onReady: function() {
     //获取用户所有食谱数据
-    this.findUserHistory();
+    //this.findUserHistory();
+    this.getUserList(1, 1);
   },
 
   /**
@@ -32,6 +42,7 @@ Page({
   onShow: function() {
     //再次判断登录
     this.judgeLogin();
+    
   },
 
   /**
@@ -84,45 +95,73 @@ Page({
     })
   },
 
-  //查询该用户的所有菜单
-  findUserHistory() {
-    const db = wx.cloud.database();
+  //每次查询用户20条菜单数据
+  getUserList(type,index) {
+    
     let openid = app.globalData.openid;
-    let that = this;
-    if (openid) {
-      // 查询当前用户所有的 counters
-      db.collection('userFoodMenu').where({
-          _openid: openid
-        })
-        .orderBy('createTime', 'desc')
-        .get({
-          success: res => {
-            let data = res.data;
-            
-            //转化时间
-            for(let i = 0;i<data.length;i++){
-              let time = data[i].createTime;
-              let hour = time.split(' ')[1].split(':')[0];
-              data[i].hour = hour;
-            };
-            console.log(data)
-            that.setData({
-              list: data,
-            });
+    //console.log("加载过数据了，openid:" + openid)
+      wx.cloud.callFunction({
+        name: 'pagination',
+        data: {
+          dbName: 'userFoodMenu',
+          filter: {
+            _openid: openid
           },
-          fail: err => {
-            wx.showToast({
-              icon: 'none',
-              title: '网络不佳，请稍后再试'
-            })
-            console.error('[数据库] [查询记录] 失败：', err)
-          }
-        })
-    }
+          pageIndex: index,
+          pageSize: 20
+        }
+      }).then(res => {
+        //console.log(res)
+        let data = res.result.data;
+        //转化时间
+        for (let i = 0; i < data.length; i++) {
+          let time = data[i].createTime;
+          let hour = time.split(' ')[1].split(':')[0];
+          data[i].hour = hour;
+        };
+        //如果请求数据为进入获取或者上拉加载type == 1
+        if (type == 1){
+          //如果还没有请求完数据
+          if (this.data.hasMore){
+            let moment_list = this.data.list;
+            for (let i = 0; i < data.length; i++) {
+              moment_list.push(data[i]);
+            }
+            this.setData({
+              list: moment_list,
+              hasMore: res.result.hasMore,
+            });
+            if (!res.result.hasMore){
+              this.setData({
+                showLoading: false,
+              });
+            }
+          }else{
+            this.setData({
+              hasMore: res.result.hasMore,
+              showLoading: false,
+            });
+          };
+        }
+        //如果请求数据为下拉刷新type == 2
+        if (type == 2){
+          this.setData({
+            list: data,
+            hasMore: res.result.hasMore,
+            showLoading: res.result.hasMore,
+          });
+          // 隐藏导航栏加载框
+          wx.hideNavigationBarLoading();
+          // 停止下拉动作
+          wx.stopPullDownRefresh();
+        }
+      })
+    
   },
+ 
 
   //跳转菜单详情
-  toFoodMenu(event){
+  toFoodMenu(event) {
     //console.log(event)
     wx.navigateTo({
       url: "/pages/index/food-menu/food-menu?_id=" + event.currentTarget.dataset.id
@@ -147,14 +186,28 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function() {
-
+    // 显示顶部刷新图标
+    wx.showNavigationBarLoading();
+    this.getUserList(2, 1);
+    this.setData({
+      pageIndex: 1,
+    });
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
+   //上拉加载
   onReachBottom: function() {
-
+    let pageIndex = this.data.pageIndex;
+    let hasMore = this.data.hasMore;
+    pageIndex++;
+    this.getUserList(1, pageIndex);
+    this.setData({
+      pageIndex: pageIndex,
+    });
+    //console.log(pageIndex)
+    
   },
 
   /**
