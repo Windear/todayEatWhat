@@ -1,4 +1,5 @@
 <!--pages/mine/mine.wxml-->
+<import src="../index/food-menu/share-modal/share-modal.wxml" />
 <!-- 顶部用户栏 -->
 <view class='user_box'>
   <view class='user_box_list' wx:if='{{!login}}' catchtap='clickLogin'>
@@ -9,30 +10,55 @@
     <image class='user_img' src='{{userImg}}'></image>
     <text class='user_name'>{{userName}}</text>
   </view>
-  <view class='user_box_share' wx:if='{{login}}'>
+  <!-- 分享按钮 -->
+  <!-- <view class='user_box_share' wx:if='{{login}}' catchtap='showShare'>
     <image src='/static/img/share.svg'></image>
-  </view>
+  </view> -->
+  <!-- 分享按钮 -->
   <image class='user_box_bg' src='/static/img/mine_bg.svg'></image>
 </view>
 <!-- 顶部用户栏 -->
 <!-- 列表栏 -->
-
-<view class='history_list' wx:for="{{list}}" wx:key="list._id" wx:for-item="item" bindtap='toFoodMenu' data-id='{{item._id}}'>
-  <view class='food_img_list_box'>
-    <image class='food_img {{"food_img_" + (index+1)}}' wx:for="{{item.foodMenu}}"  wx:key="item.foodMenu.id" wx:for-item="img" src='{{img.albums}}' wx:if="{{index < 3}}"></image>
-    <image class='food_img food_img_more' src='/static/img/more_food.svg' wx:if='{{item.foodMenu.length>3}}'></image>
+<view class="item" wx:for="{{list}}" wx:key="list._id" wx:for-item="item">
+  <!-- 列表本身 -->
+  <view class='history_list' data-index="{{index}}" data-id='{{item._id}}' bindtap='toFoodMenu' style="{{item.txtStyle}}">
+    <!-- 侧滑函数 bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" -->
+    <view class='food_img_list_box'>
+      <image class='food_img {{"food_img_" + (index+1)}}' wx:for="{{item.foodMenu}}" wx:key="item.foodMenu.id" wx:for-item="img" src='{{img.albums}}' wx:if="{{index < 3}}"></image>
+      <image class='food_img food_img_more' src='/static/img/more_food.svg' wx:if='{{item.foodMenu.length>3}}'></image>
+    </view>
+    <view class='food_text_box'>
+      <text class='food_text_name' wx:if='{{item.hour >= 3 && item.hour < 10}}'>早餐</text>
+      <text class='food_text_name' wx:if='{{item.hour >= 10 && item.hour < 16}}'>中餐</text>
+      <text class='food_text_name' wx:if='{{item.hour >= 16 && item.hour < 23 ||item.hour <3}}'>晚餐</text>
+      <text class='food_text_time'>{{item.createTime}}</text>
+    </view>
   </view>
-  <view class='food_text_box'>
-    <text class='food_text_name' wx:if='{{item.hour >= 3 && item.hour < 10}}'>早餐</text>
-    <text class='food_text_name' wx:if='{{item.hour >= 10 && item.hour < 16}}'>中餐</text>
-    <text class='food_text_name' wx:if='{{item.hour >= 16 && item.hour < 23 ||item.hour <3}}'>晚餐</text>
-    <text class='food_text_time'>{{item.createTime}}</text>
-  </view>
+  <!-- 列表本身 -->
+  <!-- 侧滑删除 -->
+  <!-- <view data-index="{{index}}" data-id='{{item._id}}' bindtap="delItem" class="inner del">删除</view> -->
+  <!-- 侧滑删除 -->
 </view>
 
-<view class='loading_box'>
-  <view class='loading' hidden='{{!showLoading}}'><image src='/static/img/loading.svg'></image><text >正在加载</text></view>
+
+  <image hidden='{{!showNone}}' class='none' src='/static/img/none_bg.png'></image>
+
+
+<view class='loading_box' hidden='{{showNone}}'>
+  <view class='loading' hidden='{{!showLoading}}'>
+    <image src='/static/img/loading.svg'></image>
+    <text>正在加载</text>
+  </view>
   <text class='loading_over' hidden='{{hasMore}}'>————✨  就吃过这么些东西了  ✨————</text>
 </view>
-
 <!-- 列表栏 -->
+
+<!-- 分享弹出层 -->
+<view wx:if="{{showShareModalStatus}}">
+  <template is="shareTemplate" />
+</view>
+<!-- 分享弹出层 -->
+
+<!--背景遮罩-->
+<view class="modalMask" bindtap="hideShare" wx:if="{{showShareModalStatus}}"></view>
+<!--背景遮罩-->

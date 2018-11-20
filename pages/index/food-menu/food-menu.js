@@ -49,10 +49,7 @@ Page({
       this.setData({
         isshare: options.isshare
       });  
-    }; 
-
-    
-
+    };    
   },
 
   
