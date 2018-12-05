@@ -2,6 +2,7 @@ Page({
   data: {
     scrollNum: 1,
     scrollTextShow: false,
+    page: 1
   },
 
   onLoad: function(options) {
@@ -37,52 +38,57 @@ Page({
 
 
   onReady: function() {
-    this.getdata(this.data.foodVal, 0);
-  }, //设置动态标题栏
+    this.getCategoryFoods(this.data.foodVal, this.data.scrollNum);
+  }, 
 
-  //获取服务器菜单
-  getdata(val, num) { //定义函数名称
-    let that = this;
-    let scrollNum = this.data.scrollNum;
-    wx.request({
-      url: 'https://longcz.binzc.com/recipes/searchMenu?str=' + val + '&pageSize=9&start=' + num, //仅为示例，并非真实的接口地址
-      method: 'POST',
-      data: {},
-      header: {
-        'content-type': 'application/json' // 默认值
-      },
-      success(res) {
-        let foodList;
-        if (num == 0) {
-          foodList = res.data;
-          that.setData({
-            scrollTextShow: false,
-          });
-        } else {
-          foodList = that.data.foodList;
-          let newList = res.data;
-
-          if (newList.length !== 0) {
-            for (let i = 0; i < newList.length; i++) {
-              foodList.push(newList[i]);
-            };
-            that.setData({
-              scrollNum: scrollNum + 1,
-
-            });
-            console.log(newList);
-          } else {
-            that.setData({
-              scrollTextShow: true,
-            });
-          }
-        }
-        that.setData({
-          foodList: foodList
-        });
-        //wx.setNavigationBarTitle({ title: that.data.foodDetail.title });
-        //console.log(foodList);
+  //查询菜单数据
+  getCategoryFoods(val, num) {
+    let filter = val;
+    let page = num;
+    wx.cloud.callFunction({
+      name: 'getCategoryFoods',
+      data: {
+        //数据库名称
+        dbName: 'foodDetails',
+        //筛选条件
+        filter: filter,
+        //返回多少条数据
+        pageSize: 10,
+        //第几页
+        pageIndex: page
       }
+    }).then(res => {
+      let data = res.result.data;
+      //console.log(res.result)
+      let foodList;
+      if (num == 1) {
+        foodList = data;
+        this.setData({
+          scrollTextShow: false,
+          scrollNum: num + 1,
+        });
+      } else {
+        foodList = this.data.foodList;
+        let newList = data;
+        if (newList.length !== 0) {
+          for (let i = 0; i < newList.length; i++) {
+            foodList.push(newList[i]);
+          };
+          this.setData({
+            scrollNum: res.result.pageIndex + 1,
+          });
+          //console.log(newList);
+        }
+      }
+      //如果返回后面没有数据了
+      if (!res.result.hasMore){
+        this.setData({
+          scrollTextShow: true,
+        });
+      }
+      this.setData({
+        foodList: foodList
+      });
     })
   },
 
@@ -96,7 +102,7 @@ Page({
 
   //搜索
   bindKeyInput(e) {
-    this.getdata(e.detail.value, 0);
+    this.getCategoryFoods(e.detail.value, 1);
 
   },
 
@@ -110,7 +116,7 @@ Page({
   //文字点搜索
   bindKeyText(event) {
     //console.log(event.currentTarget.dataset.value);
-    this.getdata(event.currentTarget.dataset.value, 0);
+    this.getCategoryFoods(event.currentTarget.dataset.value, 1);
   },
 
   //进入详情
@@ -124,9 +130,8 @@ Page({
 
   //上拉加载
   onTopScroll() {
-    let scrollNum = this.data.scrollNum;
-    this.getdata(this.data.foodVal, scrollNum);
-
+    //let scrollNum = this.data.scrollNum;
+    this.getCategoryFoods(this.data.foodVal, this.data.scrollNum);
   },
 
   //选择菜品返回
@@ -136,5 +141,4 @@ Page({
       delta: 1
     })
   },
-
 })

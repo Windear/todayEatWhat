@@ -17,40 +17,38 @@ Page({
     //总体列表 早中晚餐
 
     //主菜列表
-    mainCourse: '',
+    recommendCourse: [],
 
     //素菜列表
-    vegetableCourse: '',
+    vegetableCourse: [],
 
     //凉菜列表
-    coldCourse: '',
+    coldCourse: [],
 
     //甜品列表
-    sweetCourse: '',
+    sweetCourse: [],
 
     //汤列表
-    soupCourse: '',
+    soupCourse: [],
 
     //被选中列表
     foodMenu: [],
     userInfo: {},
     hasUserInfo: false,
     //canIUse: wx.canIUse('button.open-type.getUserInfo')
+    //第几次请求,默认为第一次
+    page: 1,
   },
 
   //进入加载
   onLoad: function() {
     this.setTime();
-    this.getdata();
-    this.getMain();
-    this.getVegetable();
-    this.getCold();
-    this.getSweet();
-    this.getSoup();
+    this.getaAllFoods();
   },
 
   //显示页面执行函数
   onShow: function() {
+
     this.setSearchFood();
     //console.log(value);
   },
@@ -67,31 +65,34 @@ Page({
     let selectFood = this.data.selectFood;
     let searchBtn = this.data.searchBtn;
     //console.log(searchBtn);
-    if (searchBtn === 0) {
-      //将传过来的参数直接添加到foodMenu并固定
-      value['index'] = foodMenu[foodMenu.length - 1].index + 1;
-      value['fixed'] = true;
-      value['type'] = "main";
-      //console.log(value);
-      foodMenu.push(value);
+    if (value) {
+      if (searchBtn === 0) {
+        //将传过来的参数直接添加到foodMenu并固定
+        value['index'] = foodMenu[foodMenu.length - 1].index + 1;
+        value['fixed'] = true;
+        value['type'] = "main";
+        //console.log(value);
+        foodMenu.push(value);
+        this.setData({
+          foodMenu: foodMenu,
+        });
+      } else if (searchBtn === 1) {
+        //将传过来的参数添加到selectFood并固定
+        selectFood.fixed = true;
+        selectFood.id = value.id;
+        selectFood.albums = value.albums;
+        selectFood.tags = value.tags;
+        selectFood.title = value.title;
+        //console.log(selectFood);      
+        this.setData({
+          selectFood: selectFood,
+        });
+      };
       this.setData({
-        foodMenu: foodMenu,
+        searchBtn: ""
       });
-    } else if (searchBtn === 1) {
-      //将传过来的参数添加到selectFood并固定
-      selectFood.fixed = true;
-      selectFood.id = value.id;
-      selectFood.albums = value.albums;
-      selectFood.tags = value.tags;
-      selectFood.title = value.title;
-      //console.log(selectFood);      
-      this.setData({
-        selectFood: selectFood,
-      });
-    };
-    this.setData({
-      searchBtn: ""
-    });
+      wx.setStorageSync('selectFoodVal', null)
+    }
   },
 
   //判断当前时间
@@ -124,113 +125,77 @@ Page({
     });
   },
 
-  //获取服务器菜单
-  getdata() { //定义函数名称
-    var that = this;
-    wx.request({
-      url: 'https://longcz.binzc.com/recipes/searchMenu?str=' + this.data.eat_time + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
-      method: 'POST',
-      data: {},
-
-      header: {
-        'content-type': 'application/json' // 默认值
-      },
-      success(res) {
-        that.setData({
-          recommendCourse: res.data
-        });
-        that.setFoodMenu();
-        //console.log(res.data)
+  //查询菜单数据
+  getCategoryFoods(category, q) {
+    let filter = q;
+    let page = this.data.page;
+    wx.cloud.callFunction({
+      name: 'getCategoryFoods',
+      data: {
+        //数据库名称
+        dbName: 'foodDetails',
+        //筛选条件
+        filter: filter,
+        //返回多少条数据
+        pageSize: 100,
+        //第几页
+        pageIndex: page
       }
-    })
-  },
-
-  //获取服务器菜单
-  getMain() { //定义函数名称
-    var that = this;
-    wx.request({
-      url: 'https://longcz.binzc.com/recipes/getDayMenu?pageSize=500&start=0', //仅为示例，并非真实的接口地址
-      method: 'POST',
-      data: {},
-      header: {
-        'content-type': 'application/json' // 默认值
-      },
-      success(res) {
-        that.setData({
-          mainCourse: res.data
+    }).then(res => {
+      let data = res.result.data;
+      this.setData({
+        page: res.result.pageIndex + 1
+      });
+      //console.log(res.result.pageIndex)
+      //根据类别将返回的数据传到相应的数组中
+      if (category == "main") {
+        let recommendCourse = this.data.recommendCourse;
+        recommendCourse = recommendCourse.concat(data);
+        this.setData({
+          recommendCourse: recommendCourse
         });
-        //console.log(res.data)
+        this.setFoodMenu();
       }
-    })
-  },
-
-  getVegetable() { //定义函数名称
-    var that = this;
-    wx.request({
-      url: 'https://longcz.binzc.com/recipes/searchMenu?str=素菜' + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
-      method: 'POST',
-      data: {},
-      header: {
-        'content-type': 'application/json' // 默认值
-      },
-      success(res) {
-        that.setData({
-          vegetableCourse: res.data
+      if (category == "vegetable") {
+        let vegetableCourse = this.data.vegetableCourse;
+        vegetableCourse = vegetableCourse.concat(data);
+        this.setData({
+          vegetableCourse: vegetableCourse
         });
       }
-    })
-  },
-
-  getCold() { //定义函数名称
-    var that = this;
-    wx.request({
-      url: 'https://longcz.binzc.com/recipes/searchMenu?str=凉菜' + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
-      method: 'POST',
-      data: {},
-      header: {
-        'content-type': 'application/json' // 默认值
-      },
-      success(res) {
-        that.setData({
-          coldCourse: res.data
+      if (category == "cold") {
+        let coldCourse = this.data.coldCourse;
+        coldCourse = coldCourse.concat(data);
+        this.setData({
+          coldCourse: coldCourse
+        });
+      }
+      if (category == "sweet") {
+        let sweetCourse = this.data.sweetCourse;
+        sweetCourse = sweetCourse.concat(data);
+        this.setData({
+          sweetCourse: sweetCourse,
+        });
+      }
+      if (category == "soup") {
+        let soupCourse = this.data.soupCourse;
+        soupCourse = soupCourse.concat(data);
+        this.setData({
+          soupCourse: soupCourse,
         });
       }
     })
   },
 
-  getSweet() { //定义函数名称
-    var that = this;
-    wx.request({
-      url: 'https://longcz.binzc.com/recipes/searchMenu?str=甜点' + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
-      method: 'POST',
-      data: {},
-      header: {
-        'content-type': 'application/json' // 默认值
-      },
-      success(res) {
-        that.setData({
-          sweetCourse: res.data
-        });
-      }
-    })
+  //获取所有分类下的菜单
+  getaAllFoods() {
+    this.getCategoryFoods('main', this.data.eat_time);
+    this.getCategoryFoods('vegetable', '素');
+    this.getCategoryFoods('cold', '凉');
+    this.getCategoryFoods('sweet', '甜');
+    this.getCategoryFoods('soup', '汤');
   },
 
-  getSoup() { //定义函数名称
-    var that = this;
-    wx.request({
-      url: 'https://longcz.binzc.com/recipes/searchMenu?str=汤' + '&pageSize=200&start=0', //仅为示例，并非真实的接口地址
-      method: 'POST',
-      data: {},
-      header: {
-        'content-type': 'application/json' // 默认值
-      },
-      success(res) {
-        that.setData({
-          soupCourse: res.data
-        });
-      }
-    })
-  },
   //根据人数设置菜品数目
   setFoodNum(event) {
     if (event.target.dataset.index == 1) {
@@ -322,6 +287,7 @@ Page({
         //console.log(a);
       }
     }, 100);
+    //
   },
 
   //判断菜单食物是否固定，如果固定则不随机，如果不固定则随机
@@ -331,7 +297,7 @@ Page({
     for (let i = 0; i < foodMenu.length; i++) {
       let randomFood = [];
       if (foodMenu[i].type == "main") {
-        randomFood = this.randomFoodMenu(this.data.mainCourse);
+        randomFood = this.randomFoodMenu(this.data.recommendCourse);
       };
       if (foodMenu[i].type == "vegetable") {
         randomFood = this.randomFoodMenu(this.data.vegetableCourse);
@@ -355,13 +321,7 @@ Page({
             foodMenu[i]["albums"] = randomFood[0].albums;
           }
         };
-
       };
-
-      // if (foodMenu[i].id){
-
-      // }
-
     };
     this.setData({
       foodMenu: foodMenu
@@ -593,11 +553,7 @@ Page({
               //   url: "food-menu/food-menu?_id=" + "W9qcfbdokuiPuJFc"
               // })
             }
-            
           })
-
-          //
-
         } else {
 
           wx.navigateTo({
@@ -662,7 +618,7 @@ Page({
   },
 
   //定义转发
-  onShareAppMessage: function (ops) {
+  onShareAppMessage: function(ops) {
     let _id = this.data._id;
     if (ops.from === 'button') {
       // 来自页面内转发按钮
@@ -671,7 +627,7 @@ Page({
     return {
       title: '今天回家吃什么？',
       path: 'pages/index/index',
-      success: function (res) {
+      success: function(res) {
         wx.showShareMenu({
           // 要求小程序返回分享目标信息
           withShareTicket: true
@@ -680,12 +636,11 @@ Page({
         // 转发成功
         //console.log("转发成功:" + JSON.stringify(res));
       },
-      fail: function (res) {
+      fail: function(res) {
         // 转发失败
         //console.log("转发失败:" + JSON.stringify(res));
       }
     }
-
   },
 
 

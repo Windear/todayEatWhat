@@ -103,7 +103,6 @@ Page({
 
   //每次查询用户20条菜单数据
   getUserList(type, index) {
-
     let openid = app.globalData.openid;
     //console.log("加载过数据了，openid:" + openid)
     wx.cloud.callFunction({

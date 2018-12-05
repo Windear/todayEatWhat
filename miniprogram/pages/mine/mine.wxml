@@ -21,7 +21,7 @@
 <!-- 列表栏 -->
 <view class="item" wx:for="{{list}}" wx:key="list._id" wx:for-item="item">
   <!-- 列表本身 -->
-  <view class='history_list' data-index="{{index}}" data-id='{{item._id}}' bindtap='toFoodMenu' style="{{item.txtStyle}}">
+  <view class='history_list' data-index="{{index}}" data-id='{{item._id}}' bindtap='toFoodMenu' style="{{item.txtStyle}}" bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE">
     <!-- 侧滑函数 bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" -->
     <view class='food_img_list_box'>
       <image class='food_img {{"food_img_" + (index+1)}}' wx:for="{{item.foodMenu}}" wx:key="item.foodMenu.id" wx:for-item="img" src='{{img.albums}}' wx:if="{{index < 3}}"></image>
@@ -36,7 +36,7 @@
   </view>
   <!-- 列表本身 -->
   <!-- 侧滑删除 -->
-  <!-- <view data-index="{{index}}" data-id='{{item._id}}' bindtap="delItem" class="inner del">删除</view> -->
+  <view data-index="{{index}}" data-id='{{item._id}}' bindtap="delItem" class="inner del">删除</view>
   <!-- 侧滑删除 -->
 </view>
 

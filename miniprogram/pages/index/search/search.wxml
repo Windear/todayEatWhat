@@ -6,10 +6,10 @@
 
 <scroll-view scroll-y style="height:{{scroll_height}}px;" bindscrolltoupper="" lower-threshold="0" bindscrolltolower="onTopScroll">
   <view class='search_list' wx:for="{{foodList}}" wx:key="*this" wx:for-item="list">
-    <image class='list_img' src='{{list.albums}}' catchtap='onFoodDetails' data-id='{{list.id}}'></image>
+    <image class='list_img'  src='{{list.albums}}' catchtap='onFoodDetails' data-id='{{list.id}}'></image>
     <view class='list_content'>
       <text class='list_title'>{{list.title}}</text>
-      <text class='list_tags'>{{list.tags}}</text>
+      <text class='list_tags'>{{list.imtro}}</text>
       <view class='list_btn' catchtap='selectFood' data-food-data="{{list}}">选择</view>
     </view>
   </view>

@@ -1,23 +1,22 @@
-
 Page({
   data: {
 
   },
 
-  onLoad: function (options) {
+  onLoad: function(options) {
     // 页面初始化 options为页面跳转所带来的参数
-    var foodId = options.id;//获取页面跳转传过来的参数
+    var foodId = options.id; //获取页面跳转传过来的参数
     //console.log(foodId);
     this.setData({
       foodId: foodId
     });
-    this.getdata();
-    
+    //this.getdata();
+    this.getFoodDetails();
   },
 
-  onReady: function () {
-    
-  },//设置动态标题栏
+  onReady: function() {
+
+  }, //设置动态标题栏
 
   //获取服务器菜单
   getdata() { //定义函数名称
@@ -37,24 +36,46 @@ Page({
         that.setData({
           foodDetail: foodDetail
         });
-        wx.setNavigationBarTitle({ title: that.data.foodDetail.title });
+        wx.setNavigationBarTitle({
+          title: that.data.foodDetail.title
+        });
         //console.log(foodDetail);
-        
+
       }
     })
   },
 
-  //加引号的字段转化为数组
-  arrayJson(credentials){
-    // var credentials = '[{"authType":"0","picture":"http: //static1.aidingmao.com/rental/img/fae5e9f0-f295-11e7-b5ea-27875362170c.jpg"},{"authType":"1","picture":"http://static1.aidingmao.com/rental/img/feb6a100-f295-11e7-b5ea-27875362170c.jpeg"}]';
+  getFoodDetails() {
+    let id = this.data.foodId;
+    wx.cloud.callFunction({
+      name: 'getFoodDetails',
+      data: {
+        id: id
+      }
+    }).then(res => {
+      let data = res.result;
+      let foodDetail = res.result.data[0];
+      // foodDetail.ingredients = this.arrayJson(foodDetail.ingredients);
+      // foodDetail.steps = this.arrayJson(foodDetail.steps);
+      // foodDetail.burden = this.arrayJson(foodDetail.burden);
+      this.setData({
+        foodDetail: foodDetail
+      });
+      wx.setNavigationBarTitle({
+        title: this.data.foodDetail.title
+      });
+    })
+  },
 
+  //加引号的字段转化为数组
+  arrayJson(credentials) {
     if (credentials == null || credentials == '' || credentials === ' ') {
       credentials = [];
-    } else if (credentials.indexOf(',') == - 1 && credentials.indexOf('.') > - 1) {
+    } else if (credentials.indexOf(',') == -1 && credentials.indexOf('.') > -1) {
       var tempImg = [];
       tempImg.push(JSON.parse(credentials));
       credentials = tempImg;
-    } else if (credentials.indexOf(',') > - 1) {
+    } else if (credentials.indexOf(',') > -1) {
       credentials = JSON.parse(credentials);
     }
     return credentials;
@@ -64,5 +85,5 @@ Page({
 
 
 
-  
+
 })

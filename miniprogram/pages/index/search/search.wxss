@@ -53,6 +53,11 @@
   font-size: 20px;
   color: #1f2d3d;
   letter-spacing: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp:1;
+  -webkit-box-orient: vertical;
 }
 
 .list_tags {

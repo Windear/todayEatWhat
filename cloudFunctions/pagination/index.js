@@ -21,12 +21,18 @@ exports.main = async(event, context) => {
   };
 
   //最后查询数据并返回给前端
-  return db.collection(dbName).where(filter)
+  return db.collection(dbName)
+  //where构建一个在当前集合上的查询条件，返回 Query，查询条件中可使用查询指令
+  .where(filter)
+  //skip指定查询时从命中的记录列表中的第几项之后开始返回
   .skip((pageIndex - 1) * pageSize)
+  //limit指定返回数据的数量上限
   .limit(pageSize)
+  //orderBy指定查询数据的排序方式
   .orderBy('createTime', 'desc')
   .get().then(res=>{
     res.hasMore = hasMore;
+    res.pageIndex = pageIndex;
     return res;
   });
 }
