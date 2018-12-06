@@ -67,6 +67,20 @@ Page({
     })
   },
 
+  //查看图片详情
+  lookImg(e){
+    let current = e.target.dataset.src;
+    let steps = this.data.foodDetail.steps;
+    let imgList = [];
+    for (let i = 0; i < steps.length;i++){
+      imgList.push(steps[i].img);
+    }
+    wx.previewImage({
+      current: current, // 当前显示图片的http链接
+      urls: imgList // 需要预览的图片http链接列表
+    })
+  },
+
   //加引号的字段转化为数组
   arrayJson(credentials) {
     if (credentials == null || credentials == '' || credentials === ' ') {

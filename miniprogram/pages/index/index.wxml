@@ -1,34 +1,26 @@
 <!--index.wxml-->
 <import src="modal/modal.wxml" />
-
+<import src="modal-add/modal.wxml" />
 <view class="container">
   <!-- 搜索框 -->
   <view class='search-box'>
     <view class="search">
       <icon type='search' size='20'></icon>
-      <input class='search-input' placeholder="告诉妈妈想吃点啥？" type='text' value='' bindconfirm="bindKeyInput" placeholder-class="placeholder" confirm-type="search" data-onbtn='{{0}}'></input>
+      <input class='search-input' placeholder="冰箱里有啥菜？" type='text' value='' bindconfirm="bindKeyInput" placeholder-class="placeholder" confirm-type="search" data-onbtn='{{0}}'></input>
     </view>
   </view>
   <!-- 搜索框 -->
 
   <view class='main_box'>
-    <view class='eat_text'>今日推荐{{eat_time}}:{{inputValue}}
+    <!-- 搜索标签 -->
+    <view class='search-tags'>
+    <view class='tag' wx:for="{{tags}}" wx:for-item="tag" wx:key="tag.id" bindtap='touchSearchTags' data-value='{{tag.val}}' style='background:{{tag.color}};'>{{tag.val}}</view>
     </view>
+    <!-- 搜索标签 -->
+    <view class='eat_text'>今日推荐{{eat_time}}:{{inputValue}}</view>
 
-    <view class='select_num'>
-      <view class='select_left_box'>
-        <text bindtap="setFoodNum" data-index="1" class='{{peopleNum==1?"action":""}}'>1人</text>
-        <text bindtap="setFoodNum" data-index="2" class='{{peopleNum==2?"action":""}}'>2人</text>
-        <text bindtap="setFoodNum" data-index="3" class='{{peopleNum==3?"action":""}}'>3人</text>
-        <text bindtap="setFoodNum" data-index="5" class='{{peopleNum==5?"action":""}}'>5人</text>
-      </view>
-      <view class='select_right_box'>
-        <text bindtap="setFoodNum" data-index="12" class='{{peopleNum==12?"action":""}}'>更多</text>
-      </view>
-    </view>
 
     <view class='eat_list'>
-
       <!-- 菜单列表 -->
       <view class='eat_list_item' wx:for="{{foodMenu}}" wx:key="food.id" wx:for-item="food" catchtap='getFoodContent' data-food-data="{{food}}">
         <view class='list_box'>
@@ -44,7 +36,7 @@
       </view>
       <!-- 菜单列表 -->
 
-      <view class='eat_list_item' bindtap="getFoodContent">
+      <view class='eat_list_item' bindtap="addFood">
         <view class='add_btn'>
           <image src='/static/img/add_btn.svg'></image>
         </view>
@@ -67,14 +59,20 @@
   </view>
   <!-- 按钮 -->
 
-  <!-- 弹出层 -->
+  <!-- 弹出菜品层 -->
   <view wx:if="{{showModalStatus}}">
     <template is="foodDetailTemplate" data="{{selectFood,add}}" />
   </view>
-  <!-- 弹出层 -->
+  <!-- 弹出菜品层 -->
+
+  <!-- 弹出加菜层 -->
+  <view wx:if="{{showAddFoodModal}}">
+    <template is="addFoodTemplate" data="" />
+  </view>
+  <!-- 弹出加菜层 -->
 
   <!--背景遮罩-->
-  <view class="modalMask" bindtap="hideModal" wx:if="{{showModalStatus}}"></view>
+  <view class="modalMask" bindtap="hideModal" wx:if="{{showModalStatus||showAddFoodModal}}"></view>
   <!--背景遮罩-->
   <!-- 背景轮播 -->
   <view class='index_bg'>

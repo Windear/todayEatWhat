@@ -22,21 +22,21 @@ Page({
   onLoad: function(options) {
     // 页面初始化 options为页面跳转所带来的参数
     var _id = options._id; //获取页面跳转传过来的参数
-    const scene = decodeURIComponent(options.scene);//获取小程序码页面跳转传过来的参数
+    const scene = decodeURIComponent(options.scene); //获取小程序码页面跳转传过来的参数
 
-    if (_id){
+    if (_id) {
       this.setData({
         _id: _id
       });
-    }else if (scene){
+    } else if (scene) {
       this.setData({
         _id: scene,
-        isshare:1
+        isshare: 1
       });
     };
 
     this.getCodeImg();
-  
+
 
     wx.setNavigationBarTitle({
       title: "回家吃菜单"
@@ -49,10 +49,10 @@ Page({
       this.setData({
         isshare: options.isshare
       });  
-    };    
+    }; 
   },
 
-  
+
 
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -68,16 +68,16 @@ Page({
     let that = this;
     let isshare = this.data.isshare;
     //获取头像图片
-    
-    if (isshare==0){
+
+    if (isshare == 0) {
       let touxiang = app.globalData.userInfo.avatarUrl;
       //将头像保存到临时文件夹
       wx.downloadFile({
         url: touxiang, // 网络返回的图片地址
-        fail: function (err) {
+        fail: function(err) {
           console.log(err)
         },
-        success: function (res) {
+        success: function(res) {
           that.setData({
             userImagePath: res.tempFilePath,
           });
@@ -126,7 +126,7 @@ Page({
   getFoodMenu() {
     const db = wx.cloud.database();
     let _id = this.data._id;
-    if (_id){
+    if (_id) {
       // 查询当前用户所有的 counters
       db.collection('userFoodMenu').where({
         _id: this.data._id
@@ -157,7 +157,7 @@ Page({
         }
       })
     }
-    
+
   },
 
   //获取食材数据
@@ -174,43 +174,35 @@ Page({
 
   //获取数据
   getdata(id) { //定义函数名称
-    var that = this;
-    // let  mainMaterial = {};
-    let mainMaterial = "";
-    wx.request({
-      url: 'https://longcz.binzc.com/recipes/getMenuById?id=' + id, //仅为示例，并非真实的接口地址
-      method: 'POST',
-      data: {},
-      //async: false,
-      header: {
-        'content-type': 'application/json' // 默认值
-      },
-      success(res) {
-        let foodDetail = res.data;
-        //主料列表
-        let ingredientsList = that.data.ingredientsList;
-        //辅料列表
-        let burdenList = that.data.burdenList;
-        //辅料
-        let burden = that.arrayJson(foodDetail.burden);
-        //主料
-        let ingredients = that.arrayJson(foodDetail.ingredients);
-
-        for (let i = 0; i < ingredients.length; i++) {
-          ingredientsList.push(ingredients[i]);
-        }
-
-        for (let j = 0; j < burden.length; j++) {
-          burdenList.push(burden[j]);
-        }
-        // console.log(burdenList);
-        that.setData({
-          ingredientsList: ingredientsList,
-          burdenList: burdenList
-        })
+    wx.cloud.callFunction({
+      name: 'getFoodDetails',
+      data: {
+        id: id
       }
+    }).then(res => {
+      let foodDetail = res.result.data[0];
+      //主料列表
+      let ingredientsList = this.data.ingredientsList;
+      //辅料列表
+      let burdenList = this.data.burdenList;
+      //辅料
+      let burden = foodDetail.burden;
+      //主料
+      let ingredients = foodDetail.ingredients;
+
+      for (let i = 0; i < ingredients.length; i++) {
+        ingredientsList.push(ingredients[i]);
+      }
+
+      for (let j = 0; j < burden.length; j++) {
+        burdenList.push(burden[j]);
+      }
+      // console.log(burdenList);
+      this.setData({
+        ingredientsList: ingredientsList,
+        burdenList: burdenList
+      })
     })
-    //console.log(mainMaterial) ;
   },
 
 
@@ -249,7 +241,7 @@ Page({
       this.setData({
         showShareModalStatus: true
       })
-      
+
       wx.showToast({
         title: '生成图片中',
         icon: 'loading',
@@ -257,8 +249,8 @@ Page({
       });
       setTimeout(function() {
 
-          wx.hideToast();
-          that.showCanvas();
+        wx.hideToast();
+        that.showCanvas();
 
       }, 1000)
     } else {
@@ -370,7 +362,7 @@ Page({
     let userImg = that.data.userImagePath;
     let tipText = that.data.tipText;
     let tellText = that.data.tellText;
-    var img = `/static/img/poster_bg` + Math.floor(Math.random() * 6) +`.png`;
+    var img = `/static/img/poster_bg` + Math.floor(Math.random() * 6) + `.png`;
     //判断想跟妈妈说的话是否为空
     if (!tellText) {
       tipText = that.data.tipText;
@@ -418,7 +410,7 @@ Page({
     ctx.setFillStyle('#8492A6');
     ctx.fillText('查看好友今天想吃些啥？', 10, 365, 190);
     //画出小程序码
-    
+
     ctx.drawImage(that.data.codeImagePath, 200, 330, 50, 50);
     ctx.save();
     //不知道是什么原因，手机环境能正常显示
@@ -453,23 +445,23 @@ Page({
     let id = this.data._id;
     wx.cloud.callFunction({
       name: 'token',
-      data: {    // 小程序码所需的参数
+      data: { // 小程序码所需的参数
         page: "pages/index/food-menu/food-menu",
         id: id,
       },
       complete: res => {
         //console.log(id);
-        console.log(res);
-        
+        //console.log(res);
+
         let appcode = res.result.code_add;
         let codeID = res.result.fileID;
         //console.log(appcode)
         wx.downloadFile({
           url: appcode, // 网络返回的图片地址
-          fail: function (err) {
+          fail: function(err) {
             console.log(err)
           },
-          success: function (res) {
+          success: function(res) {
             that.setData({
               codeImagePath: res.tempFilePath,
               fileID: codeID
@@ -479,7 +471,7 @@ Page({
         });
       }
     });
-    
+
   },
 
   //结束后删除上传的code
@@ -487,11 +479,11 @@ Page({
     let that = this;
     wx.cloud.callFunction({
       name: 'deleteCodeImg',
-      data: {    // 小程序码所需的参数
+      data: { // 小程序码所需的参数
         fileId: that.data.fileID
       },
       complete: res => {
-        console.log(res);
+        //console.log(res);
       }
     });
 

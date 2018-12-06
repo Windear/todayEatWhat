@@ -30,7 +30,7 @@
   <text class='tag_title'>做法：</text>
   <view class='step_list' wx:for="{{foodDetail.steps}}" wx:for-index="idx" wx:key="*this"  wx:for-item="step">
     <text class='step_name'>步骤{{idx+1}}/{{foodDetail.steps.length}}</text>
-    <image mode="widthFix" wx:if="{{step.img}}" class='step_img' src='{{step.img}}'></image>
+    <image mode="widthFix" wx:if="{{step.img}}" class='step_img' src='{{step.img}}' catchtap='lookImg' data-src='{{step.img}}'></image>
     <text class='step_text'>{{step.step}}</text>
   </view>
 </view>

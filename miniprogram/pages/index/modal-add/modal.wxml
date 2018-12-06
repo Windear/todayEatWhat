@@ -1,0 +1,35 @@
+<template name="addFoodTemplate">
+  <view class="detail-container2">
+    <!-- 弹窗头部 -->
+    <view class='title-box'>
+      选择菜品类别
+    </view>
+    <!-- 弹窗头部 -->
+
+    <!-- 弹窗身体 -->
+    <!-- 列表 -->
+    <view class='select-list' bindtap='addWhatFood' data-what="main">
+        随便加一个菜
+    </view>
+    <view class='select-list' bindtap='addWhatFood' data-what="vegetable">
+        加一个素菜
+    </view>
+    <view class='select-list' bindtap='addWhatFood' data-what="cold">
+        加一个凉菜
+    </view>
+    <view class='select-list' bindtap='addWhatFood' data-what="sweet">
+        加一个甜品
+    </view>
+    <view class='select-list' bindtap='addWhatFood' data-what="soup">
+        加一个汤
+    </view>
+    <!-- 列表 -->
+    <!-- 弹窗身体 -->
+  </view>
+  <!--关闭按钮-->
+  <view class="close_icon" bindtap="hideModal">
+    <icon type="cancel" size="40" color="#D3DCE6" />
+  </view>
+  <!--关闭按钮-->
+
+</template>

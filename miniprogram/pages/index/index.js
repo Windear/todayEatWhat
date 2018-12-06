@@ -12,10 +12,6 @@ Page({
     fixedFood: false,
     //预备固定菜单
     readyFixed: '',
-    //固定菜单
-    fixedFoodMenu: [],
-    //总体列表 早中晚餐
-
     //主菜列表
     recommendCourse: [],
 
@@ -38,6 +34,26 @@ Page({
     //canIUse: wx.canIUse('button.open-type.getUserInfo')
     //第几次请求,默认为第一次
     page: 1,
+    //标签列表
+    tags: [{
+      val: "懒人食谱",
+      color: "#FF5E5E"
+    }, {
+      val: "视频教程",
+        color: "#FF7DA1"
+    }, {
+      val: "家常菜",
+        color: "#FF9A9A"
+    }, {
+      val: "下饭菜",
+        color: "#FFCB33"
+    }, {
+      val: "烘焙",
+        color: "#6DDF88"
+    }, {
+      val: "快手菜",
+        color: "#7AD8EC"
+    }, ],
   },
 
   //进入加载
@@ -48,14 +64,19 @@ Page({
 
   //显示页面执行函数
   onShow: function() {
-
     this.setSearchFood();
     //console.log(value);
   },
 
-  //登录
-  getUser() {
-
+  //搜索标签
+  touchSearchTags(event) {
+    let value = event.currentTarget.dataset.value;
+    wx.navigateTo({ //子页面跳转
+      url: "search/search?val=" + value
+    });
+    this.setData({
+      searchBtn: 0
+    });
   },
 
   //或取搜索页面传回来的参数并添加到列表中并固定
@@ -67,12 +88,17 @@ Page({
     //console.log(searchBtn);
     if (value) {
       if (searchBtn === 0) {
+        let food = {};
         //将传过来的参数直接添加到foodMenu并固定
-        value['index'] = foodMenu[foodMenu.length - 1].index + 1;
-        value['fixed'] = true;
-        value['type'] = "main";
+        food['index'] = foodMenu[foodMenu.length - 1].index + 1;
+        food['fixed'] = true;
+        food['type'] = "main";
+        food['id'] = value.id;
+        food['albums'] = value.albums;
+        food['tags'] = value.tags;
+        food['title'] = value.title;
         //console.log(value);
-        foodMenu.push(value);
+        foodMenu.push(food);
         this.setData({
           foodMenu: foodMenu,
         });
@@ -196,41 +222,6 @@ Page({
     this.getCategoryFoods('soup', '汤');
   },
 
-  //根据人数设置菜品数目
-  setFoodNum(event) {
-    if (event.target.dataset.index == 1) {
-      this.setData({
-        peopleNum: event.target.dataset.index,
-        foodNum: 2,
-      });
-    };
-    if (event.target.dataset.index == 2) {
-      this.setData({
-        peopleNum: event.target.dataset.index,
-        foodNum: 3,
-      });
-    };
-    if (event.target.dataset.index == 3) {
-      this.setData({
-        peopleNum: event.target.dataset.index,
-        foodNum: 4,
-      });
-    };
-    if (event.target.dataset.index == 5) {
-      this.setData({
-        peopleNum: event.target.dataset.index,
-        foodNum: 8,
-      });
-    };
-    if (event.target.dataset.index == 12) {
-      this.setData({
-        peopleNum: event.target.dataset.index,
-        foodNum: 12,
-      });
-    };
-    this.setFoodMenu();
-  },
-
   //随机洗牌所有的菜单
   randomFoodMenu(array) {
     let m = array.length,
@@ -338,45 +329,85 @@ Page({
   //关闭弹出框
   hideModal: function() {
     this.setData({
-      showModalStatus: false
+      showModalStatus: false,
+      showAddFoodModal: false,
     })
-
   },
 
   //获取点击菜品传过来的值
   getFoodContent(event) {
     let selectFood = event.currentTarget.dataset.foodData;
-
     let foodMenu = this.data.foodMenu;
-    //如果点击的是多加个菜（传过来的值为空）
-    if (!selectFood) {
-      let selectFoodRandom = this.randomFoodMenu(this.data.mainCourse);
-      selectFoodRandom = selectFoodRandom.slice(0, 1)[0];
-      selectFood = selectFoodRandom;
-      if (foodMenu[foodMenu.length - 1]) {
-        selectFood['index'] = foodMenu[foodMenu.length - 1].index + 1;
-        //console.log(foodMenu);
-      } else {
-        selectFood['index'] = 1;
-        //console.log(foodMenu);
-      };
-      selectFood['fixed'] = false;
-      selectFood['type'] = "main";
-      //console.log(foodMenu);
-      this.setData({
-        add: true
-      })
-    } else {
-      this.setData({
-        add: false
-      })
-    };
-    //console.log(selectFood);
+    this.setData({
+      add: false
+    })
     this.setData({
       selectFood: selectFood,
       showModalStatus: true
     })
   },
+
+  //多加个菜
+  addFood() {
+    //弹出加菜列表
+    this.setData({
+      //selectFood: selectFood,
+      showAddFoodModal: true
+    })
+  },
+
+  //加什么菜
+  addWhatFood(what) {
+    //关闭弹窗
+    this.hideModal();
+    let foodMenu = this.data.foodMenu;
+    let selectFoodRandom, selectFoodDetails;
+    let selectFood = {};
+    let type = what.currentTarget.dataset.what;
+    //点击随便加个菜
+    if (type == "main") {
+      selectFoodDetails = this.randomFoodMenu(this.data.recommendCourse).slice(0, 1)[0];
+
+    }
+    //点击加个素菜
+    if (type == "vegetable") {
+      selectFoodDetails = this.randomFoodMenu(this.data.vegetableCourse).slice(0, 1)[0];
+    }
+    //点击加个凉菜
+    if (type == "cold") {
+      selectFoodDetails = this.randomFoodMenu(this.data.coldCourse).slice(0, 1)[0];
+    }
+    //点击加个甜品
+    if (type == "sweet") {
+      selectFoodDetails = this.randomFoodMenu(this.data.sweetCourse).slice(0, 1)[0];
+    }
+    //点击加个汤
+    if (type == "soup") {
+      selectFoodDetails = this.randomFoodMenu(this.data.soupCourse).slice(0, 1)[0];
+    }
+    //如果菜单列表的长度-1不等于0（菜单列表不为空）
+    if (foodMenu[foodMenu.length - 1]) {
+      //顺序放到最后一个的+1位后面
+      selectFood['index'] = foodMenu[foodMenu.length - 1].index + 1;
+    } else {
+      //顺序为第一个
+      selectFood['index'] = 1;
+    };
+    //不是固定菜品
+    selectFood['fixed'] = false;
+    selectFood['type'] = type;
+    selectFood['id'] = selectFoodDetails.id;
+    selectFood['tags'] = selectFoodDetails.tags;
+    selectFood['title'] = selectFoodDetails.title;
+    selectFood['albums'] = selectFoodDetails.albums;
+    //console.log(foodMenu);
+    this.setData({
+      selectFood: selectFood,
+      add: true
+    })
+    this.confirmFood()
+  },
+
 
   //固定菜品
   fixedFood() {
@@ -384,18 +415,14 @@ Page({
     let fixedFood = this.data.selectFood.fixed;
     let selectFood = this.data.selectFood;
     if (fixedFood) {
-
       //将固定状态改为false然后放进data中
       selectFood.fixed = false;
       //console.log(selectFood);
       this.setData({
         selectFood: selectFood,
       });
-
       //console.log(fixedFood);
     } else {
-
-
       //给选中菜单增加固定字段
       selectFood.fixed = true;
       this.setData({
@@ -425,7 +452,6 @@ Page({
     if (add) {
       foodMenu.push(selectFood);
     }
-
     //console.log(foodMenu);
     this.setData({
       foodMenu: foodMenu,
@@ -457,7 +483,7 @@ Page({
     let selectFood = this.data.selectFood;
     let selectFoodRandom = [];
     if (selectFood.type == "main") {
-      selectFoodRandom = this.randomFoodMenu(this.data.mainCourse);
+      selectFoodRandom = this.randomFoodMenu(this.data.recommendCourse);
     };
     if (selectFood.type == "vegetable") {
       selectFoodRandom = this.randomFoodMenu(this.data.vegetableCourse);
@@ -495,7 +521,6 @@ Page({
         }
       }, 100);
     };
-
   },
 
 
@@ -562,8 +587,6 @@ Page({
         }
       }
     })
-
-
   },
 
   //数据库的增加
@@ -642,9 +665,6 @@ Page({
       }
     }
   },
-
-
-
 
   getUserInfo: function(e) {
     console.log(e)

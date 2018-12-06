@@ -8,7 +8,7 @@
       <text class='food-title'>{{ingredient.name}}</text>
       <text class='food-list-num'>{{ingredient.use}}</text>
     </view>
-    <view class='list-title'>
+    <view class='list-title' wx:if="burdenList">
       <text>辅料</text>
     </view>
     <view class='list-content' wx:for="{{burdenList}}" wx:key="burden.id" wx:for-item="burden">
