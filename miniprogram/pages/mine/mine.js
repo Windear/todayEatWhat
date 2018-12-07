@@ -256,7 +256,7 @@ Page({
       this.setData({
         list: list
       });
-      console.log("活动中")
+      //console.log("活动中")
     }
   },
 

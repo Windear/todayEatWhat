@@ -1,5 +1,8 @@
+
+
 <view>
-  <image class='food_albums' mode='aspectFill' src='{{foodDetail.albums}}'></image>
+  <image class='food_albums' wx:if="{{!foodDetail.video_url}}" mode='aspectFill' src='{{foodDetail.albums}}'></image>
+  <video class='food_albums' id="myVideo" poster="{{foodDetail.albums}}" wx:if="{{foodDetail.video_url}}" src="{{foodDetail.video_url}}" controls></video>
 </view>
 
 <view class="food_title">
@@ -12,15 +15,15 @@
 
 <view class='ingredients'>
   <text class='tag_title'>主料：</text>
-  <view class='ingredients_list' wx:for="{{foodDetail.ingredients}}" wx:key="*this"  wx:for-item="ingredient">
-    <text class='ingredient_name'>{{ingredient.name}}</text>
-    <text class='ingredient_many'>{{ingredient.use}}</text>
+  <view class='ingredients_list' wx:for="{{foodDetail.ingredients}}" wx:key="*this" wx:for-item="ingredient">
+    <text class='ingredient_name' wx:if="{{ingredient.name}}">{{ingredient.name}}</text>
+    <text class='ingredient_many' wx:if="{{ingredient.use}}">{{ingredient.use}}</text>
   </view>
 </view>
 
 <view class='burden'>
-  <text class='tag_title'>辅料：</text>
-  <view class='ingredients_list' wx:for="{{foodDetail.burden}}" wx:key="*this"  wx:for-item="item">
+  <text class='tag_title' wx:if="{{foodDetail.burden}}">辅料：</text>
+  <view class='ingredients_list' wx:for="{{foodDetail.burden}}" wx:key="*this" wx:for-item="item">
     <text class='ingredient_name'>{{item.name}}</text>
     <text class='ingredient_many'>{{item.use}}</text>
   </view>
@@ -28,9 +31,27 @@
 
 <view class='steps'>
   <text class='tag_title'>做法：</text>
-  <view class='step_list' wx:for="{{foodDetail.steps}}" wx:for-index="idx" wx:key="*this"  wx:for-item="step">
+  <view class='step_list' wx:for="{{foodDetail.steps}}" wx:for-index="idx" wx:key="*this" wx:for-item="step">
     <text class='step_name'>步骤{{idx+1}}/{{foodDetail.steps.length}}</text>
     <image mode="widthFix" wx:if="{{step.img}}" class='step_img' src='{{step.img}}' catchtap='lookImg' data-src='{{step.img}}'></image>
     <text class='step_text'>{{step.step}}</text>
   </view>
 </view>
+
+<!-- 底部工具栏 -->
+<view class='toolBar'>
+  <button class='toolBar_btn share_friend ' open-type="share">
+    <image class='toolBar_btn_icon' src='/static/img/details_icon_share.svg'></image>
+    <text>分享好友</text>
+  </button>
+  <view class='toolBar_btn select_food ' catchtap='selectFood' data-food-data="{{foodDetail}}">
+    <image class='toolBar_btn_icon' src='/static/img/details_icon_select.svg'></image>
+    <text>加入菜谱</text>
+  </view>
+  <view class='toolBar_btn return_index '  bindtap='backHome' wx:if="{{isshare==1}}">
+    <image class='toolBar_btn_icon' src='/static/img/details_icon_home.svg'></image>
+    <text>返回首页</text>
+  </view>
+</view>
+<!-- 底部工具栏 -->
+

@@ -1,3 +1,4 @@
+
 page {
   background-color: #fff;
   height: 100%;
@@ -71,7 +72,7 @@ page {
   margin: 20px 0;
 }
 
-.step_img{
+.step_img {
   width: 100%;
 }
 
@@ -94,3 +95,65 @@ page {
   letter-spacing: 0;
   text-align: right;
 }
+
+.toolBar {
+  height: 49px;
+  background: #fff;
+  border-top: 1rpx solid #e0e6ed;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  /* display: flex; */
+}
+
+.toolBar_btn{
+  width: 33.3%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float: right;
+  color: #1f2d3d;
+}
+
+
+.toolBar_btn text {
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  
+  letter-spacing: 0;
+  margin-left: 10px;
+}
+
+.toolBar_btn_icon {
+  width: 20px;
+  height: 20px;
+}
+
+.share_friend{
+  background: linear-gradient(to bottom right, rgba(245, 81, 95, 1), rgba(255, 174, 186, 1));
+  color: #fff!important;
+  border-radius:0;
+}
+
+
+.share_friend::after {
+  border: 0;
+}
+
+/* 遮罩层 */
+
+.modalMask {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity: 0.3; /*背景透明度*/
+  overflow: hidden;
+  z-index: 1000;
+  color: #fff;
+}
+
+/* 遮罩层 */

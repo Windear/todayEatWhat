@@ -1,3 +1,5 @@
+
+
 Page({
   data: {
 
@@ -5,18 +7,40 @@ Page({
 
   onLoad: function(options) {
     // 页面初始化 options为页面跳转所带来的参数
-    var foodId = options.id; //获取页面跳转传过来的参数
-    //console.log(foodId);
-    this.setData({
-      foodId: foodId
-    });
+    //获取页面跳转传过来的参数
+    var foodId = options.id; 
+    //获取小程序码页面跳转传过来的参数
+    const scene = decodeURIComponent(options.scene); 
+    if (foodId) {
+      this.setData({
+        foodId: foodId
+      });
+    } else if (scene) {
+      this.setData({
+        foodId: scene,
+        isshare: 1
+      });
+    };
+    //判断是否从分享页面打开
+    if (options.isshare == 1) {
+      this.setData({
+        isshare: options.isshare
+      });
+    }; 
+
     //this.getdata();
     this.getFoodDetails();
+
   },
 
   onReady: function() {
 
   }, //设置动态标题栏
+
+  //判断页面是否为分享打开
+  is_share(){
+    
+  },
 
   //获取服务器菜单
   getdata() { //定义函数名称
@@ -93,11 +117,54 @@ Page({
       credentials = JSON.parse(credentials);
     }
     return credentials;
-  }
+  },
 
+  //跳转至首页
+  onDetail() {
+    wx.reLaunch({ //子页面跳转
+      url: "../index"
+    })
+  },
 
+  //分享
+  //转发按钮
+  onShareAppMessage: function (ops) {
+    let foodId = this.data.foodId;
+    if (ops.from === 'button') {
+      // 来自页面内转发按钮
+     // console.log(ops.target)
+    }
+    return {
+      title: this.data.foodDetail.title,
+      path: 'pages/index/food-detail/food-detail?id=' + foodId + '&isshare=1',
+      imageUrl: this.data.foodDetail.albums,
+      success: function (res) {
+        wx.showShareMenu({
+          // 要求小程序返回分享目标信息
+          withShareTicket: true
+        });
+        // 转发成功
+        console.log("转发成功:" + JSON.stringify(res));
+      },
+      fail: function (res) {
+        // 转发失败
+        console.log("转发失败:" + JSON.stringify(res));
+      }
+    }
+  },
 
+  //返回首页
+  backHome: function () {
+    wx.reLaunch({
+      url: '/pages/index/index'
+    })
+  },
 
-
-
+  //选择菜品返回
+  selectFood(e) {
+    wx.setStorageSync('selectFoodVal', e.currentTarget.dataset.foodData)
+    wx.switchTab({
+      url: '/pages/index/index'
+    })
+  },
 })

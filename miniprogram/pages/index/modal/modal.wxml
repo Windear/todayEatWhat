@@ -1,6 +1,13 @@
 <template name="foodDetailTemplate">
 
   <view class="detail-container">
+    <!-- 点菜搜索 -->
+    <view class="food_detail_search">
+      <icon type='search' size='16'></icon>
+      <input class='' placeholder="我有想吃的菜~！" placeholder-class="placeholder" bindconfirm="bindKeyInput" confirm-type="search" type='text' value='' data-onbtn='{{1}}'></input>
+    </view>
+    <!-- 点菜搜索 -->
+
     <!-- 菜品头像 -->
     <view class='food_detail_box'>
       <image class='fixed_img' wx:if="{{selectFood.fixed}}" style='width:24px;height:24px;' src='/static/img/fixed_icon.svg'></image>
@@ -16,12 +23,12 @@
     </view>
     <!-- 菜品头像 -->
 
-    <!-- 点菜搜索 -->
-    <view class="food_detail_search">
-      <icon type='search' size='16'></icon>
-      <input class='' placeholder="我有想吃的菜~！" placeholder-class="placeholder" bindconfirm="bindKeyInput" confirm-type="search" type='text' value='' data-onbtn='{{1}}'></input>
+    <!-- 查看菜谱教程 -->
+    <view class='touchDetails' catchtap='onFoodDetails' data-id='{{selectFood.id}}'>
+      查看菜品教程
     </view>
-    <!-- 点菜搜索 -->
+    <!-- 查看菜谱教程 -->
+
 
     <!-- 选择种类 -->
     <view class='select_cate_box'>
@@ -38,12 +45,12 @@
 
       <view class='fixed_food' bindtap='fixedFood'>
         <view class='select_box'>
-          <icon type='success_no_circle' size='12' wx:if="{{selectFood.fixed}}"></icon>  
+          <icon type='success_no_circle' size='12' wx:if="{{selectFood.fixed}}"></icon>
         </view>
         <text>固定菜品</text>
       </view>
 
-      <view class='delete_food' bindtap='deleteFood' wx:if="{{!add}}" >
+      <view class='delete_food' bindtap='deleteFood' wx:if="{{!add}}">
         <text>删除菜品</text>
       </view>
     </view>
@@ -51,7 +58,7 @@
 
     <!-- 随机确认 -->
     <view class='modal_btn'>
-      <view class='red_btn {{selectFood.fixed?"dis_btn":""}}'  bindtap='randomSelectFood'>随机选择</view>
+      <view class='red_btn {{selectFood.fixed?"dis_btn":""}}' bindtap='randomSelectFood'>随机选择</view>
       <view class='blue_btn' bindtap='confirmFood'>确定菜品</view>
     </view>
     <!-- 随机确认 -->

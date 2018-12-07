@@ -39,7 +39,7 @@ Page({
       val: "懒人食谱",
       color: "#FF5E5E"
     }, {
-      val: "视频教程",
+      val: "视频",
         color: "#FF7DA1"
     }, {
       val: "家常菜",
@@ -53,7 +53,10 @@ Page({
     }, {
       val: "快手菜",
         color: "#7AD8EC"
-    }, ],
+      }, {
+        val: "减肥",
+        color: "#FFD86C"
+      },],
   },
 
   //进入加载
