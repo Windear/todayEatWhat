@@ -669,6 +669,13 @@ Page({
     }
   },
 
+  //跳转至外卖页面
+  onWaimai() {
+    wx.navigateTo({ //子页面跳转
+      url: "waimai/waimai"
+    })
+  },
+
   getUserInfo: function(e) {
     console.log(e)
     app.globalData.userInfo = e.detail.userInfo

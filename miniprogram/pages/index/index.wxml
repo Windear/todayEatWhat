@@ -17,7 +17,10 @@
     <view class='tag' wx:for="{{tags}}" wx:for-item="tag" wx:key="tag.id" bindtap='touchSearchTags' data-value='{{tag.val}}' style='background:{{tag.color}};'>{{tag.val}}</view>
     </view>
     <!-- 搜索标签 -->
-    <view class='eat_text'>今日推荐{{eat_time}}:{{inputValue}}</view>
+    <view class='eat_text'>
+    <text>今日推荐{{eat_time}}:{{inputValue}}</text>  
+    <view  class='eat_waimai' bindtap='onWaimai'>不想做饭😤 ></view>
+    </view>
 
 
     <view class='eat_list'>
