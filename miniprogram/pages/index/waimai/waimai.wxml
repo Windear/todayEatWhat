@@ -1,6 +1,6 @@
 <!--pages/index/waimai/waimai.wxml-->
 <!-- 头部 -->
-<view class='page-head'>
+<view class='page-head'  bindtap='onWaimaiList'>
   <view class='more-btn'>更多餐厅</view>
   <view class='mask'></view>
   <view class='today'>{{today}}</view>
@@ -8,7 +8,7 @@
 <!-- 头部 -->
 <!-- 搜索标签 -->
 <view class='search-tags'>
-    <view class='tag' wx:for="{{tags}}" wx:for-item="tag" wx:key="tag.id" bindtap='touchSearchTags' data-value='{{tag.val}}' style='background:{{tag.color}};'>{{tag.val}}</view>
+    <!-- <view class='tag' wx:for="{{tags}}" wx:for-item="tag" wx:key="tag.id" bindtap='touchSearchTags' data-value='{{tag.val}}' style='background:{{tag.color}};'>{{tag.val}}</view> -->
     </view>
 <!-- 搜索标签 -->
 

@@ -5,6 +5,7 @@
     "pages/index/food-menu/food-menu",
     "pages/index/waimai/waimai",
     "pages/index/waimai/waimai-detail/waimai-detail",
+    "pages/index/waimai/waimai-list/waimai-list",
     "pages/index/search/search",
     "pages/mine/mine",
     "pages/login/login",
@@ -36,5 +37,10 @@
       }
     ]
   },
-  "cloud": true
+  "cloud": true,
+  "permission":{
+    "scope.userLocation":{
+      "desc":"您的位置信息将用来定位您附近的餐饮商家。"
+    }
+  }
 }

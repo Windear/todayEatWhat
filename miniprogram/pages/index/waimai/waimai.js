@@ -128,6 +128,10 @@ Page({
         let lat = res.latitude
         let log = res.longitude
         that.getShopList(lat, log);
+        app.globalData.location = {
+          latitude: lat,
+          longitude: log
+        }
       }
     })
   },
@@ -137,8 +141,10 @@ Page({
     //获取公共链接
     let url = urls.waimai_url;
     let that = this;
-    wx.showLoading({
+    wx.showToast({
       title: '加载中',
+      icon: 'loading',
+      mask: true,
     })
     wx.request({
       url: url, //仅为示例，并非真实的接口地址
@@ -154,10 +160,11 @@ Page({
         'content-type': 'application/json' // 默认值
       },
       success(res) {
-        wx.hideLoading();
-        console.log(res.data)
+        wx.hideToast();
+        //console.log(res.data)
         that.setData({
-          shopData: res.data
+          shopData: res.data,
+          dataLlist: res.data
         });
         //随机传入店铺信息
         that.setShop();
@@ -213,6 +220,14 @@ Page({
     app.globalData.selectShop = this.data.selectShop;
     wx.navigateTo({ //子页面跳转
       url: "waimai-detail/waimai-detail"
+    })
+  },
+
+  //跳转更多餐厅
+  onWaimaiList() {
+    app.globalData.waimaiList = this.data.dataLlist;
+    wx.navigateTo({ //子页面跳转
+      url: "waimai-list/waimai-list"
     })
   },
   

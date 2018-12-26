@@ -10,13 +10,49 @@
     <view class='shop-star'>
       <view class='star-box'>
         <image src='/static/img/star.svg'></image>
-        <view class='star-width'></view>
+        <view class='star-width' style='width:{{(shopData.rating/5)*100}}%;'></view>
+        <view class='star-width-bg'></view>
       </view>
 
-      <text>{{shopData.rating}}</text>
-    </view>
+      <text class='star-num'>{{shopData.rating}}</text>
+</view>
     <!-- 店铺星级 -->
-    <text class='shop-time'>营业时间：{{shopData.opening_hours[0]}}</text>
+    <text class='shop-time'>营业时间：{{shopData.opening_hours}}</text>
     <text class='distance'>{{shopData.distance}}米</text>
   </view>
+
+  <!-- 叫外卖按钮 -->
+  <view class='waimai-btn' bindtap='copyShopName'>
+    叫外卖
+  </view>
+  <!-- 叫外卖按钮 -->
+
 </view>
+<!-- 详细地址 -->
+<view class='shop-add' bindtap='openMap'>
+  <image src="/static/img/add.svg"></image>
+  <text>{{shopData.address}}</text>
+</view>
+<!-- 详细地址 -->
+
+<view class='title'>
+订餐电话
+</view>
+
+<view class='shop-add' wx:for="{{phones}}" wx:for-item="phone" wx:key="phone.id" bindtap='callPhone' data-num='{{phone}}'>
+  {{phone}}
+</view>
+
+<view class='title'>
+地图
+</view>
+
+<map
+  id="map"
+  longitude="{{includePoints[1].longitude}}"
+  latitude="{{includePoints[1].latitude}}"
+  markers="{{markers}}"
+  include-points ="{{includePoints}}"
+  show-location
+  style="width: 100%; height: 375px;"
+></map>

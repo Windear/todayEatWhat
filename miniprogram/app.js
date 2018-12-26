@@ -31,5 +31,7 @@ App({
     userInfo: null,
     openid: null,
     selectShop:null,
+    location:null,
+    waimaiList:null
   }
 })
