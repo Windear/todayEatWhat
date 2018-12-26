@@ -1,2 +1,38 @@
 <!--pages/index/waimai/waimai.wxml-->
-<text>pages/index/waimai/waimai.wxml</text>
+<!-- 头部 -->
+<view class='page-head'>
+  <view class='more-btn'>更多餐厅</view>
+  <view class='mask'></view>
+  <view class='today'>{{today}}</view>
+</view>
+<!-- 头部 -->
+<!-- 搜索标签 -->
+<view class='search-tags'>
+    <view class='tag' wx:for="{{tags}}" wx:for-item="tag" wx:key="tag.id" bindtap='touchSearchTags' data-value='{{tag.val}}' style='background:{{tag.color}};'>{{tag.val}}</view>
+    </view>
+<!-- 搜索标签 -->
+
+<!-- 店铺框 -->
+<view class='shop'>
+  <image src='{{selectShop.image_url}}'></image>
+  <text>{{selectShop.name}}</text>
+</view>
+<!-- 店铺框 -->
+<!-- 按钮 -->
+  <view class='btn_bg'>
+    <view class='btn_bg_box'>
+      <view class='btn_type random_btn' bindtap="randomShopClick">
+        <text>随机选择</text>
+      </view>
+      <view class='btn_type ok_btn' bindtap='onWaimaiDetail'>
+        <text>查看详情</text>
+      </view>
+    </view>
+  </view>
+  <!-- 按钮 -->
+<!-- 背景 -->
+<view class='waimai-bg'>
+    <image class='float-img' src='/static/img/waimai-float.svg'></image>
+    <image class='bg-img' src='/static/img/waimai-bg.png'></image>
+</view>
+<!-- 背景 -->

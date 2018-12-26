@@ -1,0 +1,22 @@
+<!--pages/index/waimai/waimai-detail/waimai-detail.wxml-->
+<view class='shop-top'>
+  <!-- 店铺图像 -->
+  <image class='shop-img' src='{{shopData.image_url}}'></image>
+  <!-- 店铺图像 -->
+
+  <view class='shop-content'>
+    <text class='shop-name'>{{shopData.name}}</text>
+    <!-- 店铺星级 -->
+    <view class='shop-star'>
+      <view class='star-box'>
+        <image src='/static/img/star.svg'></image>
+        <view class='star-width'></view>
+      </view>
+
+      <text>{{shopData.rating}}</text>
+    </view>
+    <!-- 店铺星级 -->
+    <text class='shop-time'>营业时间：{{shopData.opening_hours[0]}}</text>
+    <text class='distance'>{{shopData.distance}}米</text>
+  </view>
+</view>

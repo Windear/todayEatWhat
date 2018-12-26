@@ -30,5 +30,6 @@ App({
   globalData: {
     userInfo: null,
     openid: null,
+    selectShop:null,
   }
 })

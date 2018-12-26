@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="376px" height="603px" viewBox="0 0 376 603" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>餐厅详情</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="100%" y1="97.680347%" x2="0%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#F5F7FA" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="97.680347%" x2="0%" y2="0%" id="linearGradient-2">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#ECEFF5" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="98.2455744%" id="linearGradient-3">
+            <stop stop-color="#F5F9FF" offset="0%"></stop>
+            <stop stop-color="#D7E0EA" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="餐厅详情" transform="translate(0.000000, -64.000000)" fill-rule="nonzero">
+            <g id="Group-4" transform="translate(-72.000000, 64.000000)">
+                <circle id="Oval" fill="url(#linearGradient-1)" style="mix-blend-mode: normal;" cx="151.5" cy="506.5" r="151.5"></circle>
+                <circle id="Oval-Copy-15" fill="url(#linearGradient-2)" style="mix-blend-mode: normal;" cx="129" cy="179" r="86"></circle>
+                <circle id="Oval-Copy-16" fill="url(#linearGradient-2)" style="mix-blend-mode: normal;" cx="200.5" cy="109.5" r="48.5"></circle>
+                <circle id="Oval-Copy-14" fill="url(#linearGradient-1)" style="mix-blend-mode: normal;" cx="413" cy="128" r="20"></circle>
+                <path d="M447,341.48454 L447,603 L72,603 L72,516.826331 C220.171624,504.38037 352.253949,439.261261 447,341.48454 Z" id="Rectangle-2" fill="url(#linearGradient-3)" opacity="0.800000012" style="mix-blend-mode: normal;"></path>
+            </g>
+        </g>
+    </g>
+</svg>

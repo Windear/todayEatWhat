@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="375px" height="603px" viewBox="0 0 375 603" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>餐厅详情</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="0%" y1="0%" x2="101.999998%" y2="100.999999%" id="linearGradient-1">
+            <stop stop-color="#3023AE" offset="0%"></stop>
+            <stop stop-color="#C86DD7" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#F59251" offset="0%"></stop>
+            <stop stop-color="#FFCC0B" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="100%" x2="0%" y2="0%" id="linearGradient-3">
+            <stop stop-color="#FAD961" offset="0%"></stop>
+            <stop stop-color="#F76B1C" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#F5515F" offset="0%"></stop>
+            <stop stop-color="#FFAEBA" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="97.4688403%" id="linearGradient-5">
+            <stop stop-color="#B4EC51" offset="0%"></stop>
+            <stop stop-color="#4FDE16" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-6">
+            <stop stop-color="#FF81D8" offset="0%"></stop>
+            <stop stop-color="#FF28AD" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-7">
+            <stop stop-color="#20A0FF" offset="0%"></stop>
+            <stop stop-color="#90D0FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="餐厅详情" transform="translate(0.000000, -64.000000)" fill-rule="nonzero">
+            <g id="bg" transform="translate(0.000000, 64.000000)">
+                <rect id="Rectangle" stroke="url(#linearGradient-1)" stroke-width="3" x="31.5" y="81.5" width="9" height="9"></rect>
+                <rect id="Rectangle-Copy-3" stroke="url(#linearGradient-1)" stroke-width="5" x="335.5" y="118.5" width="15" height="15"></rect>
+                <rect id="Rectangle-Copy-5" stroke="url(#linearGradient-2)" stroke-width="4" x="55" y="505" width="10" height="10"></rect>
+                <rect id="Rectangle-Copy-4" stroke="url(#linearGradient-3)" stroke-width="3" x="287.5" y="269.5" width="9" height="9"></rect>
+                <circle id="Oval" fill="url(#linearGradient-4)" cx="51" cy="111" r="9"></circle>
+                <circle id="Oval-Copy-3" fill="url(#linearGradient-5)" cx="272" cy="64" r="4"></circle>
+                <circle id="Oval-Copy" fill="url(#linearGradient-6)" cx="86" cy="337" r="12"></circle>
+                <circle id="Oval-Copy-2" fill="url(#linearGradient-7)" cx="321" cy="559" r="12"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

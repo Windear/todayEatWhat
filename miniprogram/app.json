@@ -4,6 +4,7 @@
     "pages/index/food-detail/food-detail",
     "pages/index/food-menu/food-menu",
     "pages/index/waimai/waimai",
+    "pages/index/waimai/waimai-detail/waimai-detail",
     "pages/index/search/search",
     "pages/mine/mine",
     "pages/login/login",

@@ -1,0 +1,70 @@
+/* pages/index/waimai/waimai-detail/waimai-detail.wxss */
+
+.shop-top {
+  background: #fff;
+  box-shadow: inset 0 -1rpx 0 0 #eff2f7;
+  display: flex;
+}
+
+.shop-img {
+  height: 98px;
+  width: 120px;
+  border-radius: 4px;
+}
+
+.shop-name {
+  font-family: PingFangSC-Medium;
+  font-size: 20px;
+  color: #1f2d3d;
+  letter-spacing: 0;
+}
+
+.shop-star {
+  display: flex;
+  align-items: center;
+}
+
+.star-box {
+  height: 20px;
+  width: 100px;
+}
+
+.star-box image {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+}
+
+.star-width {
+  height: 100%;
+  width: 100%;
+  background: #f8bd1c;
+  position: relative;
+  top: -27px;
+  z-index: 0;
+}
+
+.shop-star text {
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #ff4949;
+  letter-spacing: 0;
+  margin-left: 5px;
+}
+
+.shop-time {
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #8492a6;
+  letter-spacing: 0;
+}
+
+.distance {
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #20a0ff;
+  letter-spacing: 0;
+}
