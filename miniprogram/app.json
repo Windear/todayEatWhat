@@ -1,5 +1,5 @@
 {
-  "pages":[
+  "pages": [
     "pages/index/index",
     "pages/index/food-detail/food-detail",
     "pages/index/food-menu/food-menu",
@@ -11,11 +11,11 @@
     "pages/login/login",
     "pages/logs/logs"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle":"black"
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
     "color": "#b0b0b0",
@@ -38,9 +38,10 @@
     ]
   },
   "cloud": true,
-  "permission":{
-    "scope.userLocation":{
-      "desc":"您的位置信息将用来定位您附近的餐饮商家。"
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将用来定位您附近的餐饮商家。"
     }
-  }
+  },
+  "sitemapLocation": "sitemap.json"
 }
