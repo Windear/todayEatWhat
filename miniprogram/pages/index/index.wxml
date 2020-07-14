@@ -10,7 +10,9 @@
     </view>
   </view>
   <!-- 搜索框 -->
-
+  <!-- 广告位 -->
+  <ad unit-id="adunit-074a4721f4fc5986"></ad>
+  <!-- 广告位 -->
   <view class='main_box'>
     <!-- 搜索标签 -->
     <view class='search-tags'>
@@ -19,7 +21,7 @@
     <!-- 搜索标签 -->
     <view class='eat_text'>
     <text>今日推荐{{eat_time}}:{{inputValue}}</text>  
-    <view  class='eat_waimai' bindtap='onWaimai'>不想做饭😤 ></view>
+    <!-- <view  class='eat_waimai' bindtap='onWaimai'>不想做饭😤 ></view> -->
     </view>
 
 

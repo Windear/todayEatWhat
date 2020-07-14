@@ -38,10 +38,12 @@ Page({
     tags: [{
       val: "懒人食谱",
       color: "#FF5E5E"
-    }, {
-      val: "视频",
-        color: "#FF7DA1"
-    }, {
+    }, 
+    // {
+    //   val: "视频",
+    //     color: "#FF7DA1"
+    // }, 
+    {
       val: "家常菜",
         color: "#FF9A9A"
     }, {

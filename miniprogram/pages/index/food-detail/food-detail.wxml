@@ -1,8 +1,9 @@
 
 
 <view>
-  <image class='food_albums' wx:if="{{!foodDetail.video_url}}" mode='aspectFill' src='{{foodDetail.albums}}'></image>
-  <video class='food_albums' id="myVideo" poster="{{foodDetail.albums}}" wx:if="{{foodDetail.video_url}}" src="{{video_url}}" controls></video>
+<image class='food_albums'  mode='aspectFill' src='{{foodDetail.albums}}'></image>
+  <!-- <image class='food_albums' wx:if="{{!foodDetail.video_url}}" mode='aspectFill' src='{{foodDetail.albums}}'></image> -->
+  <!-- <video class='food_albums' id="myVideo" poster="{{foodDetail.albums}}" wx:if="{{foodDetail.video_url}}" src="{{video_url}}" controls></video> -->
 </view>
 
 <view class="food_title">
