@@ -16,7 +16,7 @@
   <view class='main_box'>
     <!-- 搜索标签 -->
     <view class='search-tags'>
-    <view class='tag' wx:for="{{tags}}" wx:for-item="tag" wx:key="tag.id" bindtap='touchSearchTags' data-value='{{tag.val}}' style='background:{{tag.color}};'>{{tag.val}}</view>
+    <view class='tag' wx:for="{{tags}}" wx:for-item="tag" wx:key="id" bindtap='touchSearchTags' data-value='{{tag.val}}' style='background:{{tag.color}};'>{{tag.val}}</view>
     </view>
     <!-- 搜索标签 -->
     <view class='eat_text'>
@@ -27,7 +27,7 @@
 
     <view class='eat_list'>
       <!-- 菜单列表 -->
-      <view class='eat_list_item' wx:for="{{foodMenu}}" wx:key="food.id" wx:for-item="food" catchtap='getFoodContent' data-food-data="{{food}}">
+      <view class='eat_list_item' wx:for="{{foodMenu}}" wx:key="id" wx:for-item="food" catchtap='getFoodContent' data-food-data="{{food}}">
         <view class='list_box'>
           <image class='fixed_img' wx:if="{{food.fixed}}" src='/static/img/fixed_icon.svg'></image>
           <image class='eat_list_img' src="{{food.albums}}"></image>

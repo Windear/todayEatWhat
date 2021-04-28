@@ -252,7 +252,7 @@ Page({
         wx.hideToast();
         that.showCanvas();
 
-      }, 1000)
+      }, 2000)
     } else {
       this.setData({
         showShareModalStatus: true
@@ -359,10 +359,11 @@ Page({
   //canvas画图
   showCanvas() {
     let that = this;
-    let userImg = that.data.userImagePath;
+    let userImg = that.data.userImagePath?that.data.userImagePath:'';
     let tipText = that.data.tipText;
     let tellText = that.data.tellText;
     var img = `/static/img/poster_bg` + Math.floor(Math.random() * 6) + `.png`;
+    console.log(img)
     //判断想跟妈妈说的话是否为空
     if (!tellText) {
       tipText = that.data.tipText;
@@ -419,6 +420,18 @@ Page({
 
     //将生成好的图片保存到本地，需要延迟一会，绘制期间耗时
     setTimeout(function() {
+      // const query = wx.createSelectorQuery()
+      // query.select('#canvas_poster')
+      //   .fields({ node: true, size: true })
+      //   .exec((res) => {
+      //     var tempFilePath = res.tempFilePath;
+      //     that.setData({
+      //       imagePath: tempFilePath,
+      //       showCanvasImg: true
+      //     });
+      //     console.log(that.data.imagePath);
+      //   })
+
       wx.canvasToTempFilePath({
         canvasId: 'canvas_poster',
         success: function(res) {
@@ -427,7 +440,7 @@ Page({
             imagePath: tempFilePath,
             showCanvasImg: true
           });
-          //console.log(that.data.imagePath);
+          console.log(that.data.imagePath);
         },
         fail: function(res) {
           console.log(res);

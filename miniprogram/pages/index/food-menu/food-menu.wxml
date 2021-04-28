@@ -20,7 +20,7 @@
     <text>菜单</text>
   </view>
   <text wx:if="{{!_id}}" style='width:100%;text-align: center;'>出错啦，暂无数据。请返回。</text>
-  <view class='food-list' wx:for="{{data.foodMenu}}" wx:key="food.id" wx:for-item="food" bindtap='onFoodDetails' data-id="{{food.id}}">
+  <view class='food-list' wx:for="{{data.foodMenu}}" wx:key="id" wx:for-item="food" bindtap='onFoodDetails' data-id="{{food.id}}">
     <view class='list_box'>
       <image class='food-img' src='{{food.albums}}'></image>
       <view class='food_tag {{food.type =="vegetable"?"vegetable_food_select":"select_none"}}'>素菜</view>
