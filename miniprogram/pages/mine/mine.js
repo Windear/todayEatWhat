@@ -12,7 +12,7 @@ Page({
     //数据列表
     list: [],
     //是否显示无数据
-    showNone: false,
+    showNone: true,
     //是否显示加载完成
     showLoading: true,
     //是否后台还有数据
@@ -39,7 +39,7 @@ Page({
   onReady: function() {
     //获取用户所有食谱数据
     //this.findUserHistory();
-    this.getUserList(1, 1);
+    // this.getUserList(1, 1);
   },
 
   /**
@@ -337,7 +337,7 @@ Page({
   onPullDownRefresh: function() {
     // 显示顶部刷新图标
     wx.showNavigationBarLoading();
-    this.getUserList(2, 1);
+    // this.getUserList(2, 1);
     this.setData({
       pageIndex: 1,
     });
@@ -351,7 +351,7 @@ Page({
     let pageIndex = this.data.pageIndex;
     let hasMore = this.data.hasMore;
     pageIndex++;
-    this.getUserList(1, pageIndex);
+    // this.getUserList(1, pageIndex);
     this.setData({
       pageIndex: pageIndex,
     });

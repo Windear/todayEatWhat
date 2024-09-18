@@ -3,7 +3,8 @@
   "cloudfunctionRoot": "cloudFunctions/",
   "miniprogramRoot": "miniprogram/",
   "packOptions": {
-    "ignore": []
+    "ignore": [],
+    "include": []
   },
   "setting": {
     "urlCheck": true,
@@ -44,25 +45,12 @@
   "libVersion": "2.16.1",
   "appid": "wxcf3e54c49f32683c",
   "projectname": "%E4%BB%8A%E5%A4%A9%E5%9B%9E%E5%AE%B6%E5%90%83%E4%BB%80%E4%B9%88",
-  "debugOptions": {
-    "hidedInDevtools": []
-  },
-  "isGameTourist": false,
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
-  "condition": {
-    "search": {
-      "list": []
-    },
-    "conversation": {
-      "list": []
-    },
-    "game": {
-      "currentL": -1,
-      "list": []
-    },
-    "miniprogram": {
-      "list": []
-    }
+  "condition": {},
+  "srcMiniprogramRoot": "miniprogram/",
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
   }
 }

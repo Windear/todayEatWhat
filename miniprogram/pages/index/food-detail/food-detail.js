@@ -1,5 +1,9 @@
 //index.js
 const urls = require('../../../static/js/pubilc.js')
+import {
+  requestUtil,
+  getBaseUrl
+} from '../../../utils/requestUtil.js'
 
 Page({
   data: {
@@ -29,10 +33,7 @@ Page({
       });
     }; 
 
-    //this.getdata();
     this.getFoodDetails();
-    this.getVideoUrls();
-    //console.log(urls.data_detail_url)
   },
 
   onReady: function() {
@@ -70,63 +71,47 @@ Page({
       }
     })
   },
-
-  getFoodDetails() {
+  getFoodDetails(){
     let id = this.data.foodId;
-    wx.cloud.callFunction({
-      name: 'getFoodDetails',
-      data: {
-        id: id
-      }
-    }).then(res => {
-      let data = res.result;
-      let foodDetail = res.result.data[0];
-      // foodDetail.ingredients = this.arrayJson(foodDetail.ingredients);
-      // foodDetail.steps = this.arrayJson(foodDetail.steps);
-      // foodDetail.burden = this.arrayJson(foodDetail.burden);
+    console.log(id)
+    requestUtil({
+      url: '/cookbook/cookbookDetail/?id='+ id,
+      method: 'GET',
+      data: {}
+    }).then((res) => {
+      let foodDetail = res.data[0];
       this.setData({
         foodDetail: foodDetail
       });
       wx.setNavigationBarTitle({
-        title: this.data.foodDetail.title
-      });
+              title: foodDetail.title
+            });
+    })
+    .catch((err) => {
+      console.log(err)
     })
   },
-
-  //获取视频连接（原视频链接不可用）
-  getVideoUrls() {
-    //获取公共链接
-    let url = urls.data_detail_url;
-    let that = this;
-    wx.request({
-      url: url + '?id=' + that.data.foodId, //仅为示例，并非真实的接口地址
-      method: 'GET',
-      data: {},
-      header: {
-        'content-type': 'application/json' // 默认值
-      },
-      success(res) {
-        let videoList = res.data.content.recipe.vod_video.multi_definitions;
-        if (videoList) {
-          //循环遍历有视频的食谱
-          for (let i = 0; i < videoList.length; i++) {
-            let video_url = videoList[i].url;
-            //将食谱的视频链接进行分割并筛选
-            let fotmat = video_url.split("?")[0].split(".")
-            let video_format = fotmat[fotmat.length - 1];
-            //如果播放格式是MP4记录下来
-            if (video_format === "mp4") {
-             // console.log(video_url);
-              that.setData({
-                video_url: video_url
-              });
-            }
-
-          }
-        }
-      }
-    })
-  },
+  // getFoodDetails() {
+  //   let id = this.data.foodId;
+  //   wx.cloud.callFunction({
+  //     name: 'getFoodDetails',
+  //     data: {
+  //       id: id
+  //     }
+  //   }).then(res => {
+  //     let data = res.result;
+  //     let foodDetail = res.result.data[0];
+  //     // foodDetail.ingredients = this.arrayJson(foodDetail.ingredients);
+  //     // foodDetail.steps = this.arrayJson(foodDetail.steps);
+  //     // foodDetail.burden = this.arrayJson(foodDetail.burden);
+  //     this.setData({
+  //       foodDetail: foodDetail
+  //     });
+  //     wx.setNavigationBarTitle({
+  //       title: this.data.foodDetail.title
+  //     });
+  //   })
+  // },
 
   //查看图片详情
   lookImg(e) {

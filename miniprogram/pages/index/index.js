@@ -1,5 +1,9 @@
 //index.js
 const util = require('../../utils/util.js')
+import {
+  requestUtil,
+  getBaseUrl
+} from '../../utils/requestUtil.js'
 //获取应用实例
 const app = getApp()
 
@@ -160,24 +164,17 @@ Page({
   getCategoryFoods(category, q) {
     let filter = q;
     let page = this.data.page;
-    wx.cloud.callFunction({
-      name: 'getCategoryFoods',
-      data: {
-        //数据库名称
-        dbName: 'foodDetails',
-        //筛选条件
-        filter: filter,
-        //返回多少条数据
-        pageSize: 100,
-        //第几页
-        pageIndex: page
-      }
+    let url = '/cookbook/cookbookList/?search=' + filter
+    requestUtil({
+      url: url,
+      method: 'GET',
+      data: {}
     }).then(res => {
-      let data = res.result.data;
+      let data = res.data.results;
       this.setData({
-        page: res.result.pageIndex + 1
+        page: res.previous?res.previous:0 + 1
       });
-      //console.log(res.result.pageIndex)
+      // console.log(data)
       //根据类别将返回的数据传到相应的数组中
       if (category == "main") {
         let recommendCourse = this.data.recommendCourse;
@@ -221,9 +218,9 @@ Page({
   //获取所有分类下的菜单
   getaAllFoods() {
     this.getCategoryFoods('main', this.data.eat_time);
-    this.getCategoryFoods('vegetable', '素');
+    this.getCategoryFoods('vegetable', '素食');
     this.getCategoryFoods('cold', '凉');
-    this.getCategoryFoods('sweet', '甜');
+    this.getCategoryFoods('sweet', '甜品');
     this.getCategoryFoods('soup', '汤');
   },
 
