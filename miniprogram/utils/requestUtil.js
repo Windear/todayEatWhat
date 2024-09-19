@@ -1,9 +1,10 @@
-const baseUrl = 'http://127.0.0.1:8888'
+const baseUrl = 'http://192.168.31.201:8888'
  
 export const getBaseUrl = ()=>{
     return baseUrl;
 }
  
+
 // 后端request请求工具类
 export const requestUtil = (params)=>{
     return new Promise((resolve,reject)=>{

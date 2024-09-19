@@ -9,6 +9,7 @@ const app = getApp()
 
 Page({
   data: {
+    appData:null,
     eat_time: '',
     time: '',
     peopleNum: 1,
@@ -33,8 +34,8 @@ Page({
 
     //被选中列表
     foodMenu: [],
-    userInfo: {},
-    hasUserInfo: false,
+    userInfo: app.globalData.userInfo,
+    openid: app.globalData.openid,
     //canIUse: wx.canIUse('button.open-type.getUserInfo')
     //第几次请求,默认为第一次
     page: 1,
@@ -67,6 +68,10 @@ Page({
 
   //进入加载
   onLoad: function() {
+    this.setData({
+      appData: app.globalData,
+      openid : app.globalData.openid
+    });
     this.setTime();
     this.getaAllFoods();
   },
@@ -560,35 +565,19 @@ Page({
   //生成菜单
   setFoodsMenu() {
     //判断是否登录授权。
-    wx.getSetting({
-      success: res => {
-        //如果有直接跳转到生成菜单页面
-        //如果没有跳转至登录页面
-        if (res.authSetting['scope.userInfo']) {
-          wx.getUserInfo({
-            success: res => {
-              // 可以将 res 发送给后台解码出 unionId
-              app.globalData.userInfo = res.userInfo
-
-              // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-              // 所以此处加入 callback 以防止这种情况
-              if (app.userInfoReadyCallback) {
-                app.userInfoReadyCallback(res)
-              }
-              this.onAdd();
-              // wx.navigateTo({
-              //   url: "food-menu/food-menu?_id=" + "W9qcfbdokuiPuJFc"
-              // })
-            }
-          })
-        } else {
-
-          wx.navigateTo({
-            url: '../login/login'
-          })
+      wx.getSetting({
+        success: res => {
+          //如果有直接跳转到生成菜单页面
+          //如果没有跳转至登录页面
+          if (res.authSetting['scope.userInfo']) {
+            this.onAdd()
+          } else { 
+            wx.navigateTo({
+              url: '../login/login'
+            })
+          }
         }
-      }
-    })
+      })
   },
 
   //数据库的增加
@@ -599,29 +588,23 @@ Page({
     //数据存储成功后跳转至菜单页面
     let data = {
       openid: openid,
-      createTime: createTime,
+      // createTime: createTime,
       tellText: '',
       foodMenu: this.data.foodMenu,
       userInfo: app.globalData.userInfo
     };
-    //console.log(data)
-    const db = wx.cloud.database()
-    db.collection('userFoodMenu').add({
-      data: data,
-      success: res => {
-        // 在返回结果中会包含新创建的记录的 _id      
-        wx.navigateTo({
-          url: "food-menu/food-menu?_id=" + res._id
+    let url = '/cookbook/userCookBook/'
+    requestUtil({
+      url: url,
+      method: 'POST',
+      data: data
+    }).then((res) => {
+         wx.navigateTo({
+          url: "food-menu/food-menu?_id=" + res.data.id
         })
-        //console.log('[数据库] [新增记录] 成功: ', res._id)
-      },
-      fail: err => {
-        wx.showToast({
-          icon: 'none',
-          title: '网络不佳，请稍后再试。'
-        })
-        console.error('[数据库] [新增记录] 失败：', err)
-      }
+    })
+    .catch((err) => {
+      console.log(err)
     })
   },
 

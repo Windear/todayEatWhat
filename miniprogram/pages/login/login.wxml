@@ -3,7 +3,7 @@
 <view class='login-box'>
   <image class='logo' src='/static/img/logo.png'></image>
   <text class='login-tip'>允许微信授权后，才可以生成菜单转发哟~</text>
-  <button class='login-btn' open-type='getUserInfo' bindgetuserinfo="bindGetUserInfo">授权登录</button>
+  <button class='login-btn' open-type='getUserInfo' bindtap="getUserInfo">授权登录</button>
   <button class='pass-btn' bindtap='returnIndex'>返回首页</button>
 </view>
 

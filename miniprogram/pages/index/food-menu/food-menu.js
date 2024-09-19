@@ -1,5 +1,16 @@
 // pages/index/food-menu/food-menu.js
+import {
+  requestUtil,
+  getBaseUrl
+} from '../../../utils/requestUtil.js'
+import {
+  serializeTime
+} from '../../../utils/util'
 const app = getApp()
+//主料列表
+let ingredientsList = [];
+//辅料列表
+let burdenList = [];
 Page({
 
   /**
@@ -14,14 +25,21 @@ Page({
     isUser: false,
     showCanvasImg: false,
     tipText: "最难忘的还是妈妈的味道！",
+    userInfo: app.globalData.userInfo
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function(options) {
+  onLoad: function (options) {
+    ingredientsList = [];
+    burdenList = [];
+    this.setData({
+      userInfo: app.globalData.userInfo
+    });
     // 页面初始化 options为页面跳转所带来的参数
     var _id = options._id; //获取页面跳转传过来的参数
+    console.log(_id)
     const scene = decodeURIComponent(options.scene); //获取小程序码页面跳转传过来的参数
 
     if (_id) {
@@ -48,8 +66,10 @@ Page({
     if (options.isshare == 1) {
       this.setData({
         isshare: options.isshare
-      });  
-    }; 
+      });
+    };
+
+
   },
 
 
@@ -57,14 +77,14 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function() {
+  onReady: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function() {
+  onShow: function () {
     let that = this;
     let isshare = this.data.isshare;
     //获取头像图片
@@ -74,10 +94,10 @@ Page({
       //将头像保存到临时文件夹
       wx.downloadFile({
         url: touxiang, // 网络返回的图片地址
-        fail: function(err) {
+        fail: function (err) {
           console.log(err)
         },
-        success: function(res) {
+        success: function (res) {
           that.setData({
             userImagePath: res.tempFilePath,
           });
@@ -90,74 +110,66 @@ Page({
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function() {
+  onHide: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function() {
-    this.deleteCodeImg();
+  onUnload: function () {
+    // this.deleteCodeImg();
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function() {
+  onPullDownRefresh: function () {
 
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function() {
+  onReachBottom: function () {
 
   },
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function() {
+  onShareAppMessage: function () {
 
   },
 
   //获取菜单数据
   getFoodMenu() {
-    const db = wx.cloud.database();
+    let url = '/cookbook/userCookBookDetail/?id=';
     let _id = this.data._id;
     if (_id) {
-      // 查询当前用户所有的 counters
-      db.collection('userFoodMenu').where({
-        _id: this.data._id
-      }).get({
-        success: res => {
-          // console.log(res);
+      requestUtil({
+          url: url + _id,
+          method: 'GET',
+          data: {}
+        }).then((res) => {
           let data = res.data[0];
-
+          data.createTime = serializeTime(data.createTime)
           this.setData({
             data: data,
-          })
+          });
           //判断是否为当前用户的菜单
-          if (app.globalData.openid === data._openid) {
+          if (app.globalData.openid === data.openid) {
             this.setData({
               isUser: true,
             })
           }
           //console.log(data);
           this.getFoodMaterial();
-
-        },
-        fail: err => {
-          wx.showToast({
-            icon: 'none',
-            title: '网络不佳，请稍后再试'
-          })
-          console.error('[数据库] [查询记录] 失败：', err)
-        }
-      })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
-
   },
 
   //获取食材数据
@@ -172,19 +184,18 @@ Page({
     //console.log(this.data.burdenList);
   },
 
+
+
   //获取数据
   getdata(id) { //定义函数名称
-    wx.cloud.callFunction({
-      name: 'getFoodDetails',
-      data: {
-        id: id
-      }
+    let url = '/cookbook/cookbookDetail/?id=';
+    requestUtil({
+      url: url + id,
+      method: 'GET',
+      data: {}
     }).then(res => {
-      let foodDetail = res.result.data[0];
-      //主料列表
-      let ingredientsList = this.data.ingredientsList;
-      //辅料列表
-      let burdenList = this.data.burdenList;
+      let foodDetail = res.data[0];
+
       //辅料
       let burden = foodDetail.burden;
       //主料
@@ -193,10 +204,14 @@ Page({
       for (let i = 0; i < ingredients.length; i++) {
         ingredientsList.push(ingredients[i]);
       }
+      console.log(ingredientsList)
 
-      for (let j = 0; j < burden.length; j++) {
-        burdenList.push(burden[j]);
+      if (burden) {
+        for (let j = 0; j < burden.length; j++) {
+          burdenList.push(burden[j]);
+        }
       }
+
       // console.log(burdenList);
       this.setData({
         ingredientsList: ingredientsList,
@@ -228,7 +243,7 @@ Page({
   },
 
   //关闭弹出框
-  hideModal: function() {
+  hideModal: function () {
     this.setData({
       showModalStatus: false
     })
@@ -247,18 +262,16 @@ Page({
         icon: 'loading',
         duration: 1000
       });
-      setTimeout(function() {
-
+      setTimeout(function () {
         wx.hideToast();
         that.showCanvas();
-
       }, 2000)
     } else {
       this.setData({
         showShareModalStatus: true
       })
     }
-    //this.showCanvas();
+    this.showCanvas();
   },
 
   //关闭分享弹出框
@@ -293,7 +306,7 @@ Page({
       //showCancel: false,
       confirmText: '分享好友',
       cancelText: '生成图片',
-      success: function(res) {
+      success: function (res) {
         if (res.confirm) {
           console.log('用户点击确定')
 
@@ -305,7 +318,7 @@ Page({
   },
 
   //转发按钮
-  onShareAppMessage: function(ops) {
+  onShareAppMessage: function (ops) {
     let _id = this.data._id;
     if (ops.from === 'button') {
       // 来自页面内转发按钮
@@ -314,7 +327,7 @@ Page({
     return {
       title: this.data.data.userInfo.nickName + '的菜单',
       path: 'pages/index/food-menu/food-menu?_id=' + _id + '&isshare=1',
-      success: function(res) {
+      success: function (res) {
         wx.showShareMenu({
           // 要求小程序返回分享目标信息
           withShareTicket: true
@@ -323,7 +336,7 @@ Page({
         // 转发成功
         console.log("转发成功:" + JSON.stringify(res));
       },
-      fail: function(res) {
+      fail: function (res) {
         // 转发失败
         console.log("转发失败:" + JSON.stringify(res));
       }
@@ -334,7 +347,7 @@ Page({
   //修改给妈妈的话input
   bindKeyInput(e) {
     let that = this;
-    const db = wx.cloud.database()
+    // const db = wx.cloud.database()
     db.collection('userFoodMenu').doc(this.data._id).update({
       // data 传入需要局部更新的数据
       data: {
@@ -342,7 +355,7 @@ Page({
         tellText: e.detail.value
       },
 
-      success: function(res) {
+      success: function (res) {
         that.setData({
           tellText: e.detail.value
         });
@@ -350,7 +363,7 @@ Page({
     })
   },
 
-  backHome: function() {
+  backHome: function () {
     wx.reLaunch({
       url: '/pages/index/index'
     })
@@ -359,7 +372,7 @@ Page({
   //canvas画图
   showCanvas() {
     let that = this;
-    let userImg = that.data.userImagePath?that.data.userImagePath:'';
+    let userImg = that.data.userImagePath ? that.data.userImagePath : '';
     let tipText = that.data.tipText;
     let tellText = that.data.tellText;
     var img = `/static/img/poster_bg` + Math.floor(Math.random() * 6) + `.png`;
@@ -389,7 +402,7 @@ Page({
     ctx.arc(26, 286, 20, 0, 2 * Math.PI); //画出圆
     //ctx.setFillStyle('#fff');
     ctx.clip(); //裁剪上面的圆形
-    ctx.drawImage(userImg, 10, 270, 40, 40);
+    ctx.drawImage(userImg, 6, 266, 40, 40);
     ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 还可以继续绘制
 
     //画出显示文字
@@ -419,22 +432,10 @@ Page({
     ctx.draw();
 
     //将生成好的图片保存到本地，需要延迟一会，绘制期间耗时
-    setTimeout(function() {
-      // const query = wx.createSelectorQuery()
-      // query.select('#canvas_poster')
-      //   .fields({ node: true, size: true })
-      //   .exec((res) => {
-      //     var tempFilePath = res.tempFilePath;
-      //     that.setData({
-      //       imagePath: tempFilePath,
-      //       showCanvasImg: true
-      //     });
-      //     console.log(that.data.imagePath);
-      //   })
-
+    setTimeout(function () {
       wx.canvasToTempFilePath({
         canvasId: 'canvas_poster',
-        success: function(res) {
+        success: function (res) {
           var tempFilePath = res.tempFilePath;
           that.setData({
             imagePath: tempFilePath,
@@ -442,7 +443,7 @@ Page({
           });
           console.log(that.data.imagePath);
         },
-        fail: function(res) {
+        fail: function (res) {
           console.log(res);
         }
       });
@@ -450,41 +451,37 @@ Page({
 
   },
 
-
-
-  //获取小程序二维码
+  // 获取小程序二维码
   getCodeImg() {
     let that = this;
     let id = this.data._id;
-    wx.cloud.callFunction({
-      name: 'token',
-      data: { // 小程序码所需的参数
+    let url = '/cookbook/get_qrcode';
+    requestUtil({
+      url: url,
+      method: 'POST',
+      data: {
         page: "pages/index/food-menu/food-menu",
-        id: id,
-      },
-      complete: res => {
-        //console.log(id);
-        //console.log(res);
-
-        let appcode = res.result.code_add;
-        let codeID = res.result.fileID;
-        //console.log(appcode)
-        wx.downloadFile({
-          url: appcode, // 网络返回的图片地址
-          fail: function(err) {
-            console.log(err)
-          },
-          success: function(res) {
-            that.setData({
-              codeImagePath: res.tempFilePath,
-              fileID: codeID
-            });
-            //console.log(res.tempFilePath)
-          }
-        });
+        id: id
       }
+    }).then(res => {
+      
+     let imgurl = getBaseUrl() + res.data
+      console.log(imgurl)
+      wx.downloadFile({
+        url: imgurl, // 网络返回的图片地址
+        fail: function (err) {
+          console.log(err)
+        },
+        success: function (res) {
+          that.setData({
+            codeImagePath: res.tempFilePath,
+          });
+          //console.log(res.tempFilePath)
+        }
+      })
+    }).catch(err => {
+      console.log(err);
     });
-
   },
 
   //结束后删除上传的code
@@ -503,7 +500,7 @@ Page({
   },
 
   //保存图片至相册
-  baocun: function() {
+  baocun: function () {
     var that = this
     wx.saveImageToPhotosAlbum({
       filePath: that.data.imagePath,
@@ -513,7 +510,7 @@ Page({
           showCancel: false,
           confirmText: '好的',
           confirmColor: '#333',
-          success: function(res) {
+          success: function (res) {
             if (res.confirm) {
               console.log('用户点击确定');
               /* 该隐藏的隐藏 */
@@ -522,7 +519,7 @@ Page({
               })
             }
           },
-          fail: function(res) {
+          fail: function (res) {
             console.log(11111)
           }
         })

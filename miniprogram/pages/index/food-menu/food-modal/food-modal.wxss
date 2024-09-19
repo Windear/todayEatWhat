@@ -66,13 +66,13 @@
 }
 
 .food-title {
-  font-size: 16px;
+  font-size: 14px;
   color: #1f2d3d;
   letter-spacing: 0;
 }
 
 .food-list-num {
-  font-size: 16px;
+  font-size: 14px;
   color: #8492a6;
   letter-spacing: 0;
   text-align: right;

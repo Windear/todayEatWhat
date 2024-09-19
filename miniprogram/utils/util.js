@@ -1,3 +1,14 @@
+function serializeTime(timeStr) {
+  const dateObj = new Date(timeStr);
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const hours = String(dateObj.getHours()).padStart(2, '0');
+  const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+  const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 const formatTime = date => {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -8,6 +19,8 @@ const formatTime = date => {
 
   return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
 }
+
+
 
 const hour = date => {
   const hour = date.getHours()
@@ -29,6 +42,7 @@ const formatNumber = n => {
 }
 
 module.exports = {
+  serializeTime,
   formatTime: formatTime,
   hour: hour,
   today: today

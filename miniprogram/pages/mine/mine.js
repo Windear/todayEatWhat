@@ -28,7 +28,7 @@ Page({
    */
   onLoad: function(options) {
     //判断是否登录
-    //this.judgeLogin();
+    this.judgeLogin();
     this.initEleWidth();
 
   },
@@ -77,7 +77,7 @@ Page({
               that.setData({
                 userImg: res.userInfo.avatarUrl,
                 userName: res.userInfo.nickName,
-                login: true
+                // login: true
               });
               // wx.navigateTo({
               //   url: "food-menu/food-menu?_id=" + "W9qcfbdokuiPuJFc"
