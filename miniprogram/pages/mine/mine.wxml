@@ -21,8 +21,7 @@
 <!-- 列表栏 -->
 <view class="item" wx:for="{{list}}" wx:key="_id" wx:for-item="item">
   <!-- 列表本身 -->
-  <view class='history_list' data-index="{{index}}" data-id='{{item._id}}' bindtap='toFoodMenu' style="{{item.txtStyle}}" bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE">
-    <!-- 侧滑函数 bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" -->
+  <view class='history_list' data-index="{{index}}" data-id='{{item.id}}' bindtap='toFoodMenu' data-param="{{item}}" style="{{item.txtStyle}}" >
     <view class='food_img_list_box'>
       <image class='food_img {{"food_img_" + (index+1)}}' wx:for="{{item.foodMenu}}" wx:key="id" wx:for-item="img" src='{{img.albums}}' wx:if="{{index < 3}}"></image>
       <image class='food_img food_img_more' src='/static/img/more_food.svg' wx:if='{{item.foodMenu.length>3}}'></image>

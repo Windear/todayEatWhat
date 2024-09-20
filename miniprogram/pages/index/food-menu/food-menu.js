@@ -53,7 +53,7 @@ Page({
       });
     };
 
-    this.getCodeImg();
+
 
 
     wx.setNavigationBarTitle({
@@ -251,6 +251,7 @@ Page({
 
   //打开分享弹出框
   showShare() {
+    this.getCodeImg();
     var that = this;
     if (!this.data.imagePath) {
       this.setData({
@@ -397,22 +398,22 @@ Page({
     ctx.save(); // 保存当前context的状态
 
 
-    //画出圆头像
-    ctx.beginPath();
-    ctx.arc(26, 286, 20, 0, 2 * Math.PI); //画出圆
-    //ctx.setFillStyle('#fff');
-    ctx.clip(); //裁剪上面的圆形
-    ctx.drawImage(userImg, 6, 266, 40, 40);
-    ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 还可以继续绘制
+    // //画出圆头像
+    // ctx.beginPath();
+    // ctx.arc(26, 286, 20, 0, 2 * Math.PI); //画出圆
+    // //ctx.setFillStyle('#fff');
+    // ctx.clip(); //裁剪上面的圆形
+    // ctx.drawImage(userImg, 6, 266, 40, 40);
+    // ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 还可以继续绘制
 
     //画出显示文字
     ctx.setFontSize(16);
     ctx.setFillStyle('#1F2D3D');
-    ctx.fillText(tipText, 60, 285, 190);
-    //画出用户名
-    ctx.setFontSize(12);
-    ctx.setFillStyle('#8492A6');
-    ctx.fillText(app.globalData.userInfo.nickName, 60, 307, 190);
+    ctx.fillText(tipText, 10, 285, 190);
+    // //画出用户名
+    // ctx.setFontSize(12);
+    // ctx.setFillStyle('#8492A6');
+    // ctx.fillText(app.globalData.userInfo.nickName, 60, 307, 190);
     //画一条线
     ctx.setFillStyle('#E0E6ED');
     ctx.fillRect(10, 320, 240, 1);

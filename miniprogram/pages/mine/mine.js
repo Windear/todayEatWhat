@@ -1,4 +1,11 @@
 // pages/mine/mine.js
+import {
+  requestUtil,
+  getBaseUrl
+} from '../../utils/requestUtil.js'
+import {
+  serializeTime
+} from '../../utils/util'
 //获取应用实例
 const app = getApp()
 Page({
@@ -6,6 +13,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    openid:null,
     login: false,
     //默认请求第一页
     pageIndex: 1,
@@ -27,6 +35,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
+    this.setData({
+      openid: app.globalData.openid
+    });
     //判断是否登录
     this.judgeLogin();
     this.initEleWidth();
@@ -38,8 +49,7 @@ Page({
    */
   onReady: function() {
     //获取用户所有食谱数据
-    //this.findUserHistory();
-    // this.getUserList(1, 1);
+    this.getUserList(1, 1);
   },
 
   /**
@@ -57,12 +67,13 @@ Page({
   //判断是否登录
   judgeLogin() {
     let that = this;
+    console.log(this.data.openid)
     //判断是否登录授权。
     wx.getSetting({
       success: res => {
         //如果有直接跳转到生成菜单页面
         //如果没有跳转至登录页面
-        if (res.authSetting['scope.userInfo']) {
+        if (this.data.openid != null) {
           wx.getUserInfo({
             success: res => {
               // 可以将 res 发送给后台解码出 unionId
@@ -104,21 +115,17 @@ Page({
   //每次查询用户20条菜单数据
   getUserList(type, index) {
     let openid = app.globalData.openid;
+    let url = '/cookbook/userCookBook/?openid=' + openid + '&p=' + index;
     //console.log("加载过数据了，openid:" + openid)
-    wx.cloud.callFunction({
-      name: 'pagination',
-      data: {
-        dbName: 'userFoodMenu',
-        filter: {
-          _openid: openid
-        },
-        pageIndex: index,
-        pageSize: 20
-      }
+    requestUtil({
+      url: url,
+      method: 'GET',
+      data: {}
     }).then(res => {
-      let data = res.result.data;
+      let data = res.data.results;
+      
       //如果返回的数据为空
-      if (index === 1 && data.length === 0) {
+      if (data.length === 0) {
         //显示空态图
         this.setData({
           showNone: true,
@@ -129,48 +136,47 @@ Page({
           showNone: false,
         });
       }
-      //转化时间
-      for (let i = 0; i < data.length; i++) {
-        let time = data[i].createTime;
-        let hour = time.split(' ')[1].split(':')[0];
-        data[i].hour = hour;
-      };
       //如果请求数据为进入获取或者上拉加载type == 1
       if (type == 1) {
         //如果还没有请求完数据
-        if (this.data.hasMore) {
-          let moment_list = this.data.list;
-          for (let i = 0; i < data.length; i++) {
-            moment_list.push(data[i]);
-          }
-          this.setData({
-            list: moment_list,
-            hasMore: res.result.hasMore,
-          });
-          if (!res.result.hasMore) {
-            this.setData({
-              showLoading: false,
-            });
-          }
-        } else {
-          this.setData({
-            hasMore: res.result.hasMore,
-            showLoading: false,
-          });
-        };
+        let moment_list = this.data.list;
+        data.forEach(element => {
+          element.createTime = serializeTime(element.createTime)
+          moment_list.push(element);
+         });
+        this.setData({
+          list: moment_list,
+          showLoading: false,
+        });
+        
       }
       //如果请求数据为下拉刷新type == 2
       if (type == 2) {
+        let moment_list =[];
+        data.forEach(element => {
+          element.createTime = serializeTime(element.createTime)
+          moment_list.push(element);
+         });
         this.setData({
-          list: data,
-          hasMore: res.result.hasMore,
-          showLoading: res.result.hasMore,
+          list: moment_list,
+          showLoading: false,
         });
         // 隐藏导航栏加载框
         wx.hideNavigationBarLoading();
         // 停止下拉动作
         wx.stopPullDownRefresh();
       }
+      if (res.data.next != null) {
+        this.setData({
+          hasMore: true,
+          
+        });
+      } else {
+        this.setData({
+          hasMore: false,
+          
+        });
+      };
     })
 
   },
@@ -178,9 +184,10 @@ Page({
 
   //跳转菜单详情
   toFoodMenu(event) {
-    //console.log(event)
+    const param = event.currentTarget.dataset.param;
+    console.log(param)
     wx.navigateTo({
-      url: "/pages/index/food-menu/food-menu?_id=" + event.currentTarget.dataset.id
+      url: "/pages/index/food-menu/food-menu?_id=" +param.id
     })
   },
 
@@ -198,68 +205,6 @@ Page({
       showShareModalStatus: false
     })
   },
-
-  //滑动开始事件
-  touchS: function(e) {
-    if (e.touches.length == 1) {
-      this.setData({
-        //设置触摸起始点水平方向位置
-        startX: e.touches[0].clientX
-      });
-    }
-  },
-
-  //滑动事件
-  touchM: function(e) {
-    if (e.touches.length == 1) {
-      //手指移动时水平方向位置
-      var moveX = e.touches[0].clientX;
-      //手指起始点位置与移动期间的差值
-      var disX = this.data.startX - moveX;
-      var delBtnWidth = this.data.delBtnWidth;
-      var txtStyle = "";
-      if (disX == 0 || disX < 0) { //如果移动距离小于等于0，说明向右滑动，文本层位置不变
-        txtStyle = "left:0px";
-      } else if (disX > 0) { //移动距离大于0，文本层left值等于手指移动距离
-        txtStyle = "left:-" + disX + "px";
-        if (disX >= delBtnWidth) {
-          //控制手指移动距离最大值为删除按钮的宽度
-          txtStyle = "left:-" + delBtnWidth + "px";
-        }
-      }
-      //获取手指触摸的是哪一项
-      var index = e.currentTarget.dataset.index;
-      var list = this.data.list;
-      list[index].txtStyle = txtStyle;
-      //更新列表的状态
-      this.setData({
-        list: list
-      });
-    }
-  },
-
-  // 滑动中事件
-  touchE: function(e) {
-    if (e.changedTouches.length == 1) {
-      //手指移动结束后水平位置
-      var endX = e.changedTouches[0].clientX;
-      //触摸开始与结束，手指移动的距离
-      var disX = this.data.startX - endX;
-      var delBtnWidth = this.data.delBtnWidth;
-      //如果距离小于删除按钮的1/2，不显示删除按钮
-      var txtStyle = disX > delBtnWidth / 2 ? "left:-" + delBtnWidth + "px" : "left:0px";
-      //获取手指触摸的是哪一项
-      var index = e.currentTarget.dataset.index;
-      var list = this.data.list;
-      list[index].txtStyle = txtStyle;
-      //更新列表的状态
-      this.setData({
-        list: list
-      });
-      //console.log("活动中")
-    }
-  },
-
 
   //获取元素自适应后的实际宽度
   getEleWidth: function(w) {
@@ -337,7 +282,7 @@ Page({
   onPullDownRefresh: function() {
     // 显示顶部刷新图标
     wx.showNavigationBarLoading();
-    // this.getUserList(2, 1);
+    this.getUserList(2, 1);
     this.setData({
       pageIndex: 1,
     });
@@ -350,8 +295,11 @@ Page({
   onReachBottom: function() {
     let pageIndex = this.data.pageIndex;
     let hasMore = this.data.hasMore;
-    pageIndex++;
-    // this.getUserList(1, pageIndex);
+    if(hasMore){
+      pageIndex++;
+      this.getUserList(1, pageIndex);
+    }
+    
     this.setData({
       pageIndex: pageIndex,
     });
