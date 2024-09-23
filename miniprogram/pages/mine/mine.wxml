@@ -2,14 +2,14 @@
 <import src="../index/food-menu/share-modal/share-modal.wxml" />
 <!-- 顶部用户栏 -->
 <view class='user_box'>
-  <view class='user_box_list' wx:if='{{!login}}' catchtap='clickLogin'>
+  <!-- <view class='user_box_list' wx:if='{{!login}}' catchtap='clickLogin'>
     <image class='user_img' src='/static/img/logo.png'></image>
     <text class='user_name'>点击登录</text>
   </view>
   <view class='user_box_list' wx:if='{{login}}'>
     <image class='user_img' src='{{userImg}}'></image>
     <text class='user_name'>{{userName}}</text>
-  </view>
+  </view> -->
   <!-- 分享按钮 -->
   <!-- <view class='user_box_share' wx:if='{{login}}' catchtap='showShare'>
     <image src='/static/img/share.svg'></image>

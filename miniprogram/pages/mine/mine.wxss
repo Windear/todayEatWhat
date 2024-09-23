@@ -6,7 +6,7 @@ page{
 }
 
 .user_box {
-  height: 80px;
+  height: 40px;
   background: #ff6b6b;
   display: flex;
   justify-content: space-between;

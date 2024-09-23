@@ -9,7 +9,9 @@ const app = getApp()
 
 Page({
   data: {
-    appData:null,
+    needToWatchAd: false, // 默认不需要看广告
+    showAdConfirmDialog: false, // 控制广告确认弹窗的显示
+    appData: null,
     eat_time: '',
     time: '',
     peopleNum: 1,
@@ -41,43 +43,147 @@ Page({
     page: 1,
     //标签列表
     tags: [{
-      val: "懒人食谱",
-      color: "#FF5E5E"
-    }, 
-    // {
-    //   val: "视频",
-    //     color: "#FF7DA1"
-    // }, 
-    {
-      val: "家常菜",
+        val: "懒人食谱",
+        color: "#FF5E5E"
+      },
+      // {
+      //   val: "视频",
+      //     color: "#FF7DA1"
+      // }, 
+      {
+        val: "家常菜",
         color: "#FF9A9A"
-    }, {
-      val: "下饭菜",
+      }, {
+        val: "下饭菜",
         color: "#FFCB33"
-    }, {
-      val: "烘焙",
+      }, {
+        val: "烘焙",
         color: "#6DDF88"
-    }, {
-      val: "快手菜",
+      }, {
+        val: "快手菜",
         color: "#7AD8EC"
       }, {
         val: "减肥",
         color: "#FFD86C"
-      },],
+      },
+    ],
   },
 
+
   //进入加载
-  onLoad: function() {
+  onLoad: function () {
     this.setData({
       appData: app.globalData,
-      openid : app.globalData.openid
+      openid: app.globalData.openid
     });
     this.setTime();
     this.getaAllFoods();
+
+
+    // 若在开发者工具中无法预览广告，请切换开发者工具中的基础库版本
+
+
+
+    // 假设从缓存或其他数据源检查用户是否看过广告
+    const watchAD = wx.getStorageSync('watchAD');
+    const storedTime = wx.getStorageSync('saveWatchADTime');
+    if (watchAD && storedTime) {
+      const currentTime = new Date().getTime();
+      const elapsedTime = (currentTime - storedTime) / (1000 * 60 * 60); // 转换为小时
+      if (elapsedTime < 24) {
+        // 未超过 24 小时，使用存储的值
+        this.setData({
+          watchAD: watchAD
+        });
+      } else {
+        // 超过 24 小时，设置为 false 并清除存储
+        wx.removeStorageSync('watchAD');
+        wx.removeStorageSync('saveWatchADTime');
+        this.setData({
+          watchAD: false
+        });
+      }
+    } else {
+      // 没有存储的值，初始化为 false
+      this.setData({
+        watchAD: false
+      });
+    }
   },
 
+  handleButtonClick() {
+    // 在页面中定义激励视频广告
+    let videoAd = null
+    // 在页面onLoad回调事件中创建激励视频广告实例
+    if (wx.createRewardedVideoAd) {
+      videoAd = wx.createRewardedVideoAd({
+        adUnitId: 'adunit-4a277f5552c6fc53'
+      })
+      videoAd.onLoad(() => {
+
+      })
+      videoAd.onError((err) => {
+        console.error('激励视频光告加载失败', err)
+      })
+      videoAd.onClose((res) => {
+        if (res && res.isEnded) {
+          // 用户看完广告后点击关闭
+          wx.setStorageSync('watchAD', true)
+          const currentTime = new Date().getTime();
+          wx.setStorageSync('saveWatchADTime', currentTime)
+          this.setData({
+            watchAD: true
+          });
+          console.log('用户看完广告后关闭', this.data.watchAD);
+
+          // 可以进行相应的处理，比如给予奖励等
+        } else {
+          // 用户未看完广告就点击关闭
+          wx.setStorageSync('watchAD', false)
+          // 可以进行相应的提示等处理
+          console.log('用户未看完广告就关闭', this.data.watchAD);
+
+        }
+      })
+    }
+    wx.showModal({
+      title: '提示',
+      content: '今日还未看过广告，每日看一次广告可畅用所有功能',
+      success(res) {
+        if (res.confirm) {
+          // console.log('用户点击确定')
+          // 用户触发广告后，显示激励视频广告
+          if (videoAd) {
+            videoAd.show().catch(() => {
+              // 失败重试
+              videoAd.load()
+                .then(() => videoAd.show())
+                .catch(err => {
+                  console.error('激励视频 广告显示失败', err)
+                })
+            })
+          }
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+  },
+
+  //判断是否看过广告
+  isWatchAd() {
+    let isWatch = this.data.watchAD
+    if (!isWatch) {
+      this.handleButtonClick()
+      return false
+    } else {
+      return true
+    }
+  },
+
+
   //显示页面执行函数
-  onShow: function() {
+  onShow: function () {
     this.setSearchFood();
     //console.log(value);
   },
@@ -177,7 +283,7 @@ Page({
     }).then(res => {
       let data = res.data.results;
       this.setData({
-        page: res.previous?res.previous:0 + 1
+        page: res.previous ? res.previous : 0 + 1
       });
       // console.log(data)
       //根据类别将返回的数据传到相应的数组中
@@ -276,16 +382,19 @@ Page({
 
   //点击随机选择
   randomFoodClick() {
-    let that = this;
-    let a = 10;
-    setInterval(function() {
-      if (a != 0) {
-        a--;
-        that.setRandomFood();
-        //console.log(a);
-      }
-    }, 100);
-    //
+    if (this.isWatchAd()) {
+      let that = this;
+      let a = 10;
+      setInterval(function () {
+        if (a != 0) {
+          a--;
+          that.setRandomFood();
+          //console.log(a);
+        }
+      }, 100);
+      //
+    }
+
   },
 
   //判断菜单食物是否固定，如果固定则不随机，如果不固定则随机
@@ -334,7 +443,7 @@ Page({
   },
 
   //关闭弹出框
-  hideModal: function() {
+  hideModal: function () {
     this.setData({
       showModalStatus: false,
       showAddFoodModal: false,
@@ -520,7 +629,7 @@ Page({
     if (!selectFood.fixed) {
       let that = this;
       let a = 10;
-      setInterval(function() {
+      setInterval(function () {
         if (a != 0) {
           a--;
           that.setSelectFoodMenu();
@@ -564,20 +673,22 @@ Page({
 
   //生成菜单
   setFoodsMenu() {
-    //判断是否登录授权。
+    if (this.isWatchAd()) {
+      //判断是否登录授权。
       wx.getSetting({
         success: res => {
           //如果有直接跳转到生成菜单页面
           //如果没有跳转至登录页面
           if (res.authSetting['scope.userInfo']) {
             this.onAdd()
-          } else { 
+          } else {
             wx.navigateTo({
               url: '../login/login'
             })
           }
         }
       })
+    }
   },
 
   //数据库的增加
@@ -595,30 +706,30 @@ Page({
     };
     let url = '/cookbook/userCookBook/'
     requestUtil({
-      url: url,
-      method: 'POST',
-      data: data
-    }).then((res) => {
-         wx.navigateTo({
+        url: url,
+        method: 'POST',
+        data: data
+      }).then((res) => {
+        wx.navigateTo({
           url: "food-menu/food-menu?_id=" + res.data.id
         })
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   },
 
 
 
   //事件处理函数
-  bindViewTap: function() {
+  bindViewTap: function () {
     wx.navigateTo({
       url: '../logs/logs'
     })
   },
 
   //退出登录
-  exitUpLogo: function() {
+  exitUpLogo: function () {
     this.setData({
       userInfo: {},
       hasUserInfo: false
@@ -626,7 +737,7 @@ Page({
   },
 
   //定义转发
-  onShareAppMessage: function(ops) {
+  onShareAppMessage: function (ops) {
     let _id = this.data._id;
     if (ops.from === 'button') {
       // 来自页面内转发按钮
@@ -635,7 +746,7 @@ Page({
     return {
       title: '今天回家吃什么？',
       path: 'pages/index/index',
-      success: function(res) {
+      success: function (res) {
         wx.showShareMenu({
           // 要求小程序返回分享目标信息
           withShareTicket: true
@@ -644,7 +755,7 @@ Page({
         // 转发成功
         //console.log("转发成功:" + JSON.stringify(res));
       },
-      fail: function(res) {
+      fail: function (res) {
         // 转发失败
         //console.log("转发失败:" + JSON.stringify(res));
       }
@@ -658,7 +769,7 @@ Page({
     })
   },
 
-  getUserInfo: function(e) {
+  getUserInfo: function (e) {
     console.log(e)
     app.globalData.userInfo = e.detail.userInfo
     this.setData({

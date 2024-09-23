@@ -37,7 +37,7 @@ page {
 
 .steps {
   margin: 20px 15px 10px;
-  margin-bottom: 60px;
+  padding-bottom: 120px;
 }
 
 .tag_title {

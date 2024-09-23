@@ -85,26 +85,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    let that = this;
-    let isshare = this.data.isshare;
-    //获取头像图片
 
-    if (isshare == 0) {
-      let touxiang = app.globalData.userInfo.avatarUrl;
-      //将头像保存到临时文件夹
-      wx.downloadFile({
-        url: touxiang, // 网络返回的图片地址
-        fail: function (err) {
-          console.log(err)
-        },
-        success: function (res) {
-          that.setData({
-            userImagePath: res.tempFilePath,
-          });
-          //console.log(res.tempFilePath)
-        }
-      });
-    }
   },
 
   /**
@@ -373,7 +354,6 @@ Page({
   //canvas画图
   showCanvas() {
     let that = this;
-    let userImg = that.data.userImagePath ? that.data.userImagePath : '';
     let tipText = that.data.tipText;
     let tellText = that.data.tellText;
     var img = `/static/img/poster_bg` + Math.floor(Math.random() * 6) + `.png`;
@@ -467,7 +447,7 @@ Page({
     }).then(res => {
       
      let imgurl = getBaseUrl() + res.data
-      console.log(imgurl)
+      // console.log(imgurl)
       wx.downloadFile({
         url: imgurl, // 网络返回的图片地址
         fail: function (err) {
@@ -477,7 +457,22 @@ Page({
           that.setData({
             codeImagePath: res.tempFilePath,
           });
-          //console.log(res.tempFilePath)
+          //删除后台生成的二维码图片delete_qrcode
+          let d_url = '/cookbook/delete_qrcode';
+          let d_imgname = imgurl.split('/')[imgurl.split('/').length - 1]
+          requestUtil({
+            url: d_url,
+            method: 'POST',
+            data: {
+              file_name: d_imgname,
+            }
+          }).then(res => {
+            if(res.status==200){
+              console.log('后台二维码删除成功')
+            }else{
+              console.log(res)
+            }
+          })
         }
       })
     }).catch(err => {

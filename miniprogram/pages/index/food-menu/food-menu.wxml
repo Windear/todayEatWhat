@@ -3,16 +3,16 @@
 <import src="share-modal/share-modal.wxml" />
 
 <view class='user-data'>
-  <image src='{{data.userInfo.avatarUrl}}'></image>
+  <!-- <image src='{{data.userInfo.avatarUrl}}'></image> -->
   <view class='text-box'>
-    <text class='ncik-name'>{{data.userInfo.nickName}} 的菜单</text>
+    <text class='ncik-name'>我的菜单</text>
     <text class='create-time'>{{data.createTime}}</text>
   </view>
 </view>
 
-<view class='tell-text'>
+<!-- <view class='tell-text'>
   <input disabled="{{!isUser}}" type='text' maxlength="12" placeholder="说出你想对大厨说的话？" confirm-type="done" bindconfirm="bindKeyInput" placeholder-class="placeholder-type" value='{{data.tellText}}'></input>
-</view>
+</view> -->
 
 
 <view class='food-list-box'>

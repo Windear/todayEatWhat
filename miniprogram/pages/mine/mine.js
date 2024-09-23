@@ -35,29 +35,30 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-    this.setData({
-      openid: app.globalData.openid
-    });
-    //判断是否登录
-    this.judgeLogin();
-    this.initEleWidth();
-
+   
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function() {
-    //获取用户所有食谱数据
-    this.getUserList(1, 1);
+   
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function() {
-    //再次判断登录
+    this.setData({
+      openid: app.globalData.openid,
+      list: [],
+      pageIndex:1,
+    });
+    //判断是否登录
     this.judgeLogin();
+    this.initEleWidth();
+     //获取用户所有食谱数据
+     this.getUserList(1, 1);
 
   },
 
@@ -67,13 +68,13 @@ Page({
   //判断是否登录
   judgeLogin() {
     let that = this;
-    console.log(this.data.openid)
+    console.log(app.globalData.openid)
     //判断是否登录授权。
     wx.getSetting({
       success: res => {
         //如果有直接跳转到生成菜单页面
         //如果没有跳转至登录页面
-        if (this.data.openid != null) {
+        if (app.globalData.openid != null) {
           wx.getUserInfo({
             success: res => {
               // 可以将 res 发送给后台解码出 unionId
@@ -84,7 +85,7 @@ Page({
                 app.userInfoReadyCallback(res)
               }
               //获取到授权
-              //console.log(res.userInfo);
+              // console.log(res.userInfo);
               that.setData({
                 userImg: res.userInfo.avatarUrl,
                 userName: res.userInfo.nickName,
@@ -138,6 +139,7 @@ Page({
       }
       //如果请求数据为进入获取或者上拉加载type == 1
       if (type == 1) {
+      
         //如果还没有请求完数据
         let moment_list = this.data.list;
         data.forEach(element => {
@@ -148,7 +150,8 @@ Page({
           list: moment_list,
           showLoading: false,
         });
-        
+        wx.stopPullDownRefresh();
+        wx.hideNavigationBarLoading();
       }
       //如果请求数据为下拉刷新type == 2
       if (type == 2) {
@@ -177,6 +180,11 @@ Page({
           
         });
       };
+    })    .catch((err) => {
+      this.setData({
+        hasMore: false,
+      });
+      console.log(err)
     })
 
   },

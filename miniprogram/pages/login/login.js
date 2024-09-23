@@ -102,22 +102,22 @@ Page({
                 let openid = data.openid
                 app.globalData.openid = openid
 
-                wx.switchTab({
-                  url: '/pages/index/index',
-                  success: () => {
-                    console.log('页面跳转成功，此时 globalData 中的 userInfo 已更新。');
-                  },
-                  fail: (err) => {
-                    console.error('页面跳转失败：', err);
-                  },
-                });
+                // wx.switchTab({
+                //   url: '/pages/index/index',
+                //   success: () => {
+                //     console.log('页面跳转成功，此时 globalData 中的 userInfo 已更新。');
+                //   },
+                //   fail: (err) => {
+                //     console.error('页面跳转失败：', err);
+                //   },
+                // });
                 //已经授权登录后跳转至生成菜单页面。
                 // wx.redirectTo({
                 //   url: "../index/food-menu/food-menu?openid=" + openid
                 // })
-                // wx.navigateBack({
-                //   delta: 1
-                // })
+                wx.navigateBack({
+                  delta: 1
+                })
 
                 console.log(data)
               })

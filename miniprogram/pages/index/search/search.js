@@ -4,137 +4,120 @@ import {
 } from '../../../utils/requestUtil.js'
 
 Page({
-  data: {
-    pageNum: 1,
-    scrollTextShow: false,
-    page: 1,
-    hasMore: false,
-  },
-  //同步搜索框val
-  setFoodVal(e) {
-    this.setData({
-      foodVal: e.detail.value
-    })
-  },
-
-  onLoad: function (options) {
-    // 页面初始化 options为页面跳转所带来的参数
-    var val = options.val; //获取页面跳转传过来的参数
-    //console.log(foodId);
-    this.setData({
-      foodVal: val,
-    });
-    wx.setNavigationBarTitle({
-      title: "告诉妈妈想吃什么"
-    });
-    this.getSys();
-  },
-
-  //获取系统信息
-  getSys() {
-    var that = this
-    // 获取系统信息
-    wx.getWindowInfo({
-      success: function (res) {
-        //console.log(res);
-        // 可使用窗口宽度、高度
-        //console.log('height=' + res.windowHeight);
-        //console.log('width=' + res.windowWidth);
-        // 计算主体部分高度,单位为px
-        that.setData({
-          scroll_height: res.windowHeight - 48
-        })
-      }
-    })
-  },
-
-
-  onReady: function () {
-    this.getCategoryFoods(this.data.foodVal, this.data.pageNum);
-  },
-
-
-  //查询菜单数据
-  // getCategoryFoods(val, num) {
-  //   let filter = val;
-  //   let page = num;
-  //   wx.cloud.callFunction({
-  //     name: 'getCategoryFoods',
-  //     data: {
-  //       //数据库名称
-  //       dbName: 'foodDetails',
-  //       //筛选条件
-  //       filter: filter,
-  //       //返回多少条数据
-  //       pageSize: 10,
-  //       //第几页
-  //       pageIndex: page
-  //     }
-  //   }).then(res => {
-  //     let data = res.result.data;
-  //     //console.log(res.result)
-  //     let foodList;
-  //     if (num == 1) {
-  //       foodList = data;
-  //       this.setData({
-  //         scrollTextShow: false,
-  //         pageNum: num + 1,
-  //       });
-  //     } else {
-  //       foodList = this.data.foodList;
-  //       let newList = data;
-  //       if (newList.length !== 0) {
-  //         for (let i = 0; i < newList.length; i++) {
-  //           foodList.push(newList[i]);
-  //         };
-  //         this.setData({
-  //           pageNum: res.result.pageIndex + 1,
-  //         });
-  //         //console.log(newList);
-  //       }
-  //     }
-  //     //如果返回后面没有数据了
-  //     if (!res.result.hasMore){
-  //       this.setData({
-  //         scrollTextShow: true,
-  //       });
-  //     }
-  //     this.setData({
-  //       foodList: foodList
-  //     });
-  //   })
-  // },
-
-  //获取本地数据库数据（非微信云开发）
-  async getCategoryFoods(val, num) {
-    let filter = val;
-    let page = num;
-    let url = '/cookbook/cookbookList/'
-    if (filter) url = '/cookbook/cookbookList/?search=' + filter
-    await requestUtil({
-        url: url,
-        method: 'GET',
-        data: {}
-      }).then((res) => {
-        let data = res.data.results;
-        let foodList = data;
+      data: {
+        pageNum: 1,
+        scrollTextShow: false,
+        page: 1,
+        hasMore: true,
+      },
+      //同步搜索框val
+      setFoodVal(e) {
         this.setData({
-          scrollTextShow: false,
-          pageNum: num + 1,
-          foodList: foodList
+          foodVal: e.detail.value
+        })
+      },
+
+      onLoad: function (options) {
+        // 页面初始化 options为页面跳转所带来的参数
+        var val = options.val; //获取页面跳转传过来的参数
+        //console.log(foodId);
+        this.setData({
+          foodVal: val,
         });
+        wx.setNavigationBarTitle({
+          title: "告诉妈妈想吃什么"
+        });
+        this.getSys();
+      },
+
+      //获取系统信息
+      getSys() {
+        var that = this
+        // 获取系统信息
+        wx.getWindowInfo({
+          success: function (res) {
+            //console.log(res);
+            // 可使用窗口宽度、高度
+            //console.log('height=' + res.windowHeight);
+            //console.log('width=' + res.windowWidth);
+            // 计算主体部分高度,单位为px
+            that.setData({
+              scroll_height: res.windowHeight - 48
+            })
+          }
+        })
+      },
+
+
+      onReady: function () {
+        this.getCategoryFoods(this.data.foodVal, this.data.pageNum);
+      },
+
+
+
+
+      //获取本地数据库数据（非微信云开发）
+      async getCategoryFoods(val, num) {
+        let filter = val;
+        let page = num;
+        let url = '/cookbook/cookbookList/'
+        if (filter) url = '/cookbook/cookbookList/?search=' + filter + '&p=' + page;
+        await requestUtil({
+          url: url,
+          method: 'GET',
+          data: {}
+        }).then((res) => {
+          let data = res.data.results;
+          let foodList = data;
+          if (page == 1) {
+           
+            this.setData({
+              scrollTextShow: false,
+              pageNum: num + 1,
+              foodList: foodList
+            });
+          } else {
+           
+            foodList = this.data.foodList;
+          
+            let newList = data;
+            console.log(res.data)
+            if (newList.length !== 0) {
+              for (let i = 0; i < newList.length; i++) {
+                foodList.push(newList[i]);
+              };
+              this.setData({
+                foodList:foodList,
+                pageNum: res.data.pageIndex + 1,
+              });
+            }
+
+          }
+          //如果返回后面没有数据了
+          if (res.data.next == null) {
+            
+            this.setData({
+              scrollTextShow: true,
+              hasMore : false
+            });
+          }
+
+          wx.stopPullDownRefresh();
+          wx.hideNavigationBarLoading();
       })
-      .catch((err) => {
-        console.log(err)
-      })
+    .catch((err) => {
+      console.log(err)
+    })
 
   },
 
   //清除搜索栏文字
   removeSearchVal() {
+    console.log(12312312)
     this.setData({
       foodVal: ''
     });
+
   },
 
   //搜索
@@ -159,10 +142,31 @@ Page({
   },
 
   //上拉加载
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  //上拉加载
+  onReachBottom: function () {
+    if(this.data.hasMore){
+      this.onTopScroll()
+    }
+  },
+
+
+
   onTopScroll() {
-    //let pageNum = this.data.pageNum;
+    let pageNum = this.data.pageNum;
     console.log(pageNum)
     this.getCategoryFoods(this.data.foodVal, this.data.pageNum);
+  },
+//下拉刷新
+  onPullDownRefresh: function() {
+    // 显示顶部刷新图标
+    wx.showNavigationBarLoading();
+    this.getCategoryFoods(this.data.foodVal, 1);
+    this.setData({
+      hasMore: true,
+    });
   },
 
   //选择菜品返回
