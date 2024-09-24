@@ -3,7 +3,7 @@
   "projectname": "%E4%BB%8A%E5%A4%A9%E5%9B%9E%E5%AE%B6%E5%90%83%E4%BB%80%E4%B9%88",
   "setting": {
     "compileHotReLoad": true,
-    "urlCheck": false
+    "urlCheck": true
   },
   "libVersion": "3.4.10"
 }

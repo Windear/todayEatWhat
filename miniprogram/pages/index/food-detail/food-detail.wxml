@@ -45,10 +45,12 @@
     <image class='toolBar_btn_icon' src='/static/img/details_icon_share.svg'></image>
     <text>分享好友</text>
   </button>
-  <view class='toolBar_btn select_food ' catchtap='selectFood' data-food-data="{{foodDetail}}">
+  <button style="background-color: #00000000;border: 0px solid #000; border-radius:0;"  class='select_food toolBar_btn  '>
+  <view style="display: flex;align-items: center;"  catchtap='selectFood' data-food-data="{{foodDetail}}">
     <image class='toolBar_btn_icon' src='/static/img/details_icon_select.svg'></image>
     <text>加入菜谱</text>
   </view>
+</button>
   <view class='toolBar_btn return_index '  bindtap='backHome' wx:if="{{isshare==1}}">
     <image class='toolBar_btn_icon' src='/static/img/details_icon_home.svg'></image>
     <text>返回首页</text>

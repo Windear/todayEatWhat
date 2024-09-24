@@ -43,9 +43,9 @@
     <view class='red_btn' bindtap='showModal'>
       <image src='/static/img/food-basket.svg'></image>买菜清单</view>
 
-    <!-- <button class='blue_btn' open-type="share"> -->
-     <view class='blue_btn' bindtap='showShare' wx:if="{{isshare!=1}}">
-      <image src='/static/img/share.svg'></image>分享菜单
+    <!-- <button class='blue_btn' open-type="share"  bindtap='showShare'> -->
+     <view class='blue_btn' wx:if="{{isshare!=1}}"  open-type="share">
+      <image src='/static/img/share.svg'></image><button class='blue_btn' style="background: #00000000;" open-type="share" >分享菜单</button>
       </view>
        <view class='blue_btn' bindtap='backHome' wx:if="{{isshare==1}}">
       <image src='/static/img/home.svg'></image>我也要点菜

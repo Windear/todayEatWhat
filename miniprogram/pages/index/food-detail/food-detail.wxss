@@ -98,7 +98,7 @@ page {
 }
 
 .toolBar {
-  height: 49px;
+  height: 80px;
   background: #fff;
   border-top: 1rpx solid #e0e6ed;
   position: fixed;
@@ -115,6 +115,7 @@ page {
   justify-content: center;
   align-items: center;
   float: right;
+  padding-bottom: 20px;
   color: #1f2d3d;
 }
 

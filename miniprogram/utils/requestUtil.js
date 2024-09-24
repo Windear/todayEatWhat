@@ -1,4 +1,4 @@
-const baseUrl = 'http://192.168.31.201:8888'
+const baseUrl = 'https://nas.5windy.com:4443'
  
 export const getBaseUrl = ()=>{
     return baseUrl;
@@ -7,6 +7,7 @@ export const getBaseUrl = ()=>{
 
 // 后端request请求工具类
 export const requestUtil = (params)=>{
+  
     return new Promise((resolve,reject)=>{
         wx.request({
             ...params,
